@@ -8,9 +8,9 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The registry schema, optional deterministic seed of one fictional organization and 48 applications, and opt-in read-only registry API are implemented. The setup below runs the foundation and applies the current schema; seeding and API scope configuration are explicit separate steps.
+**Working UI: application registry and details, plus AG-03 foundation status.** React displays real database-backed registry records through the opt-in read-only API. Search, filters, pagination, and application details work with the deterministic 48-application seed. The setup below runs the foundation and applies the current schema; seeding and API scope configuration are explicit separate steps.
 
-The registry screens, login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet.
+Login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet. Governance is shown as unavailable, and ownership as not recorded, rather than inventing values.
 
 ## Prototype scope and data
 
@@ -151,13 +151,17 @@ From `frontend/`:
 pnpm dev
 ```
 
-Vite uses port 5173 with `strictPort` so it cannot silently switch away from the configured CORS origin. React Router serves the foundation page at `/`; TanStack Query fetches liveness and readiness independently. Checks run on load, every ten seconds while the page is active, on window focus, and when clicking **Check again**. A five-second browser timeout bounds each check.
+Vite uses port 5173 with `strictPort` so it cannot silently switch away from the configured CORS origin. React Router redirects `/` to `/applications`, serves details at `/applications/:id`, and keeps health checks at `/foundation`. Registry filters and page numbers live in the URL and are preserved when returning from details. Without the optional API scope/seed setup, the registry shows an unavailable or empty state.
+
+On `/foundation`, TanStack Query fetches liveness and readiness independently. Checks run on load, every ten seconds while the page is active, on window focus, and when clicking **Check again**. A five-second browser timeout bounds each check. Registry reads also time out after five seconds, refresh on request/focus as needed, and hide cached rows after a failed refresh.
 
 The page distinguishes **Connected**, **Unavailable**, **Checking**, and **Unknown**. If the backend cannot be reached, database status is unknown rather than claiming a database diagnosis. A failed refetch takes precedence over cached healthy data.
 
 ## 9. Open the application
 
 - Frontend: <http://localhost:5173>
+- Registry: <http://localhost:5173/applications>
+- Foundation status: <http://localhost:5173/foundation>
 - API documentation: <http://localhost:8000/docs>
 - Liveness: <http://localhost:8000/api/v1/health/live>
 - Readiness: <http://localhost:8000/api/v1/health/ready>

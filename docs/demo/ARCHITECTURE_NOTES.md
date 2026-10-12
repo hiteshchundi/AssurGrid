@@ -39,3 +39,11 @@ The applications module separates typed API contracts, HTTP handling, and explic
 The API is intentionally disabled unless a development organization scope is configured. Authentication is not implemented yet: any caller who can reach the enabled local API can read the selected scope. This temporary dependency must become authenticated session membership/assignment enforcement in Slice 06. No protected-production-use or finalized AG-04 claim is made.
 
 Owner IDs are nullable response fields and return null until the user/assignment schema exists. Governance health is omitted until policies and concrete obligations support it. No new migration or data writes are included. PostgreSQL API tests cover actual seeded reads, pagination, filter combinations, literal/injection-shaped searches, missing IDs, cross-organization isolation, and safe failures.
+
+## Slice 05 — Registry list and detail screens
+
+The default route now opens the registry; foundation health remains accessible at `/foundation`. This registry-first entry is reversible when the attention dashboard arrives. TanStack Query owns server fetching and caching. Search/filter/page state lives in the URL, including the return link from an application. Forms apply filters explicitly, and counts/rows come only from the API.
+
+The UI distinguishes loading, empty, invalid/missing record, and unavailable states; a failed refetch suppresses stale records. It provides a synthetic-data banner, semantic labels/table headings, keyboard controls, and a horizontally scrollable table on narrow screens. Governance is unavailable rather than a fake Current badge, and missing owner IDs are not converted into invented people. Timestamp presentation uses the browser timezone without calculating business status.
+
+The React review covered hook order, stable row keys, label associations, focus indicators, direct imports, and use of TanStack Query rather than manual fetch effects. No dependencies were added. See [Slice 05 verification](SLICE_05_VERIFICATION.md) for actual browser checks.
