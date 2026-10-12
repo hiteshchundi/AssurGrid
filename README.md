@@ -1,8 +1,30 @@
 # AssurGrid
 
-AG-03 establishes the executable foundation for AssurGrid, a governance workspace for regulated computerized systems. This milestone includes health checks only.
+AssurGrid is a personal portfolio prototype of a governance workspace for regulated computerized systems. It is being built to help Quality, Governance, and Application Owners answer: **what exists, what changed, what is due, what is missing, and where is the evidence?**
 
-The current source of truth is `CODEX_AG-03_Initial_Build_Prompt.md`, `prod-docs/AG-03_Foundation_Build.md`, and `prod-docs/AG-03_Decisions.md`. Their narrower scope supersedes conflicting AG-03 instructions in the older implementation specification. All supplied design documents are preserved.
+Application ownership, periodic compliance review (PCR) dates, changes, audit findings, and document references are often scattered across spreadsheets and enterprise tools. AssurGrid's intended workflow brings that information into an application-centered view, with traceable deadlines and drill-down from portfolio to application, activity, and evidence.
+
+Lifecycle state, validation state, and ongoing governance health answer different questions. An application can be **Operational / Validated / Overdue** when its periodic review is late. The prototype will derive governance health from applicable obligations and organization-configured rules while preserving policy and activity history.
+
+## Current implementation
+
+**AG-03 foundation only:** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. Alembic has an empty baseline migration. The setup below runs this foundation.
+
+The application registry, login, policies, obligations, governance dashboard, change/QA workflow, and demo dataset are planned; they are not implemented yet.
+
+## Prototype scope and data
+
+AssurGrid is intended to provide oversight alongside authoritative change-management, quality, and document repositories. Replacing those systems, executing validation tests, authoring controlled documents, and generic project management are outside this prototype's scope.
+
+All future internal organization, application, owner, change, and document records will be invented, reproducible, and labeled **SYNTHETIC DEMO DATA**. No internal company or client records will be used. Any genuine public-reference dataset will remain separately identified with its source and retrieval metadata, outside application governance metrics.
+
+This is not production-validated software and makes no regulatory certification or compliant electronic-signature claim. No live ServiceNow, Veeva, VQD, GCMS, or enterprise SSO integration exists. Planned CSV adapters and outbound updates will be explicitly simulated; example review frequencies and deadlines are fictional organization policies, not universal regulatory requirements.
+
+## Build instructions and source of truth
+
+The [prototype build contract](AssurGrid_CODEX_PROTOTYPE_BUILD.md) governs the incremental build order and approval gates alongside the owner's latest explicit instructions. Each small slice is implemented, checked, and reviewed before explicit approval to commit; pushing requires separate approval.
+
+The existing foundation follows [AG-03 decisions](prod-docs/AG-03_Decisions.md), the [foundation build](prod-docs/AG-03_Foundation_Build.md), and the [initial build prompt](CODEX_AG-03_Initial_Build_Prompt.md). Preserve those implemented constraints and the locked [product philosophy](prod-docs/AG-00-product-philosophy.md), [product design](prod-docs/AG-01_Product_Design.md), and [architecture](prod-docs/AG-02_System_Architecture.md). The [older implementation specification](AssurGrid_Codex_Implementation_Spec.md) supplies non-conflicting engineering guidance. See the [AG-03 implementation report](docs/AG-03_Implementation_Report.md) for previous verification evidence.
 
 ## Prerequisites
 
