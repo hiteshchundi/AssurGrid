@@ -18,6 +18,16 @@ The organization timezone is required and nonblank. Its IANA validity must be ch
 
 ## Verification and limitations
 
-Integration tests start a disposable PostgreSQL 18 cluster using a private Unix socket. They apply Alembic from an empty database, reapply head with sample data present, exercise downgrade/re-upgrade only in the test database, compare schema metadata, and check relational constraints and transaction rollback. Test records are invented and discarded. No reusable seed or public data ingestion is implemented.
+Integration tests start a disposable PostgreSQL 18 cluster using a private Unix socket. They apply Alembic from an empty database, reapply head with sample data present, exercise downgrade/re-upgrade only in the test database, compare schema metadata, and check relational constraints and transaction rollback. Test records are invented and discarded. No public data ingestion is implemented.
 
 The schema alone does not enforce application-user permissions, create historical audit events, or prove regulatory compliance. Those require later slices. This remains a personal portfolio prototype with no formal validation package, compliant electronic signatures, or live enterprise integrations.
+
+## Slice 03 — Reproducible synthetic registry
+
+The generator uses an intentional catalog of 48 fictional applications and stable UUIDv5 IDs. No random dependency or source data is needed. A frozen organization-local date determines invented initialization timestamps, while lifecycle and validation values stay independent. The registry includes the seven required demo application identities, but no health, deadlines, findings, or other unimplemented domain facts are fabricated.
+
+The seed is an explicit development command for a local database named `assurgrid_demo`. It requires confirmation, compares existing registry rows before writing, and inserts only missing exact seed records. A transaction and table write lock prevent partial datasets or concurrent writes during comparison. Edited rows and a changed seed date cause refusal rather than a silent rewrite; no reset/update/delete behavior exists.
+
+CSV exports include synthetic source labels and a versioned manifest with the date, timezone, counts, and hashes. They are generated inspection artifacts, not an implemented CSV ingestion pipeline. Database descriptions retain the synthetic label; dedicated import/source tables arrive later. Seeds do not claim to produce business audit evidence.
+
+Tests exercise the actual CLI twice against a disposable demo database, verify stable contents, reject altered datasets, and compare exports byte-for-byte with the checked-in snapshot. See [data instructions](../../mock-data/README.md) for safety boundaries and reproducible commands.

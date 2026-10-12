@@ -8,15 +8,15 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The first registry migration adds organization and application tables; no application records are seeded yet. The setup below runs the foundation and applies the current schema.
+**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The registry schema and an optional deterministic seed of one fictional organization and 48 applications are implemented. The setup below runs the foundation and applies the current schema; seeding is an explicit separate step.
 
-The registry API and screens, login, policies, obligations, governance dashboard, change/QA workflow, and demo dataset are planned; they are not implemented yet.
+The registry API and screens, login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only.
 
 ## Prototype scope and data
 
 AssurGrid is intended to provide oversight alongside authoritative change-management, quality, and document repositories. Replacing those systems, executing validation tests, authoring controlled documents, and generic project management are outside this prototype's scope.
 
-All future internal organization, application, owner, change, and document records will be invented, reproducible, and labeled **SYNTHETIC DEMO DATA**. No internal company or client records will be used. Any genuine public-reference dataset will remain separately identified with its source and retrieval metadata, outside application governance metrics.
+All internal demo organization, application, owner, change, and document records are or will be invented, reproducible, and labeled **SYNTHETIC DEMO DATA**. No internal company or client records will be used. Any genuine public-reference dataset will remain separately identified with its source and retrieval metadata, outside application governance metrics.
 
 This is not production-validated software and makes no regulatory certification or compliant electronic-signature claim. No live ServiceNow, Veeva, VQD, GCMS, or enterprise SSO integration exists. Planned CSV adapters and outbound updates will be explicitly simulated; example review frequencies and deadlines are fictional organization policies, not universal regulatory requirements.
 
@@ -87,6 +87,8 @@ alembic -c backend/alembic.ini current
 The expected revision is `0002_application_registry`. The original empty `0001_foundation` baseline is preserved; the new migration adds `public.organization` and `public.regulated_application` with no seed rows. Alembic and FastAPI use the same environment settings. Upgrading adds tables without replacing existing data. Downgrading this registry migration drops both tables and their records; use downgrade only in a disposable database.
 
 ## 5. Start FastAPI
+
+For the optional 48-application dataset, follow the [demo-data instructions](mock-data/README.md) to create and seed a separate `assurgrid_demo` database. Preview without a database using `python backend/scripts/seed_demo.py --as-of 2026-10-12 --dry-run`. No seed runs automatically during migration or API startup.
 
 With the virtual environment activated, in a terminal at the repository root:
 
@@ -210,5 +212,6 @@ Browser → React → FastAPI → SQLAlchemy → psycopg → PostgreSQL
 - `infra/compose.yaml`: PostgreSQL only
 - `prod-docs/`: preserved product and architecture source documents
 - `docs/AG-03_Implementation_Report.md`: implementation and verification evidence
+- `mock-data/`: synthetic registry snapshots, source manifest, and safe seed instructions
 
-AG-04 and user-facing business workflows are not implemented. The registry schema is the first domain slice.
+AG-04 and user-facing business workflows are not implemented. The registry schema and synthetic seed are the first domain slices.

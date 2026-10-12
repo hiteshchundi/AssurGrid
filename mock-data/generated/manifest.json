@@ -1,0 +1,15 @@
+{
+  "label": "SYNTHETIC DEMO DATA",
+  "source_system": "SYNTHETIC",
+  "seed_version": "registry-v1",
+  "as_of": "2026-10-12",
+  "timezone": "Asia/Kolkata",
+  "organizations": 1,
+  "applications": 48,
+  "generator": "backend/scripts/seed_demo.py",
+  "sha256": {
+    "organizations.csv": "62bfa5b533dcc2f53bd6c6e9816204e3f26ba9d8dae35b724ace48b935fdec95",
+    "applications.csv": "a7c1c1cd8d02f758e6d2b1323735acc92711dab1b7303418ce498c980ea4e7d0"
+  },
+  "timestamp_meaning": "Invented creation time at local midnight on as_of; not an actual historical event."
+}
