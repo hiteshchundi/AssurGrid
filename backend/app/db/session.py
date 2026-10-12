@@ -1,13 +1,10 @@
 from collections.abc import Iterator
 from functools import lru_cache
 
-from sqlalchemy import Engine, MetaData, create_engine
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-
-# Empty until a real domain requirement introduces tables.
-metadata = MetaData()
 
 
 @lru_cache

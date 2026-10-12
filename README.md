@@ -8,9 +8,9 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**AG-03 foundation only:** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. Alembic has an empty baseline migration. The setup below runs this foundation.
+**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The first registry migration adds organization and application tables; no application records are seeded yet. The setup below runs the foundation and applies the current schema.
 
-The application registry, login, policies, obligations, governance dashboard, change/QA workflow, and demo dataset are planned; they are not implemented yet.
+The registry API and screens, login, policies, obligations, governance dashboard, change/QA workflow, and demo dataset are planned; they are not implemented yet.
 
 ## Prototype scope and data
 
@@ -84,7 +84,7 @@ alembic -c backend/alembic.ini upgrade head
 alembic -c backend/alembic.ini current
 ```
 
-The expected revision is `0001_foundation`. It is intentionally empty: only Alembic's tracking table is created in `public`. No business or sample tables exist. Alembic and FastAPI use the same environment settings.
+The expected revision is `0002_application_registry`. The original empty `0001_foundation` baseline is preserved; the new migration adds `public.organization` and `public.regulated_application` with no seed rows. Alembic and FastAPI use the same environment settings. Upgrading adds tables without replacing existing data. Downgrading this registry migration drops both tables and their records; use downgrade only in a disposable database.
 
 ## 5. Start FastAPI
 
@@ -105,7 +105,15 @@ source backend/.venv/bin/activate
 python -m pytest backend/tests
 ```
 
-Tests isolate the database dependency. They verify liveness without database access, successful readiness, safe failure while liveness remains healthy, and configured-origin CORS. They do not need a running PostgreSQL server.
+The four health tests isolate the database dependency. They verify liveness without database access, successful readiness, safe failure while liveness remains healthy, and configured-origin CORS. They do not need a running PostgreSQL server. Registry integration tests are skipped unless you explicitly provide PostgreSQL 18 binaries:
+
+```sh
+# macOS/Homebrew example; use your installed PostgreSQL 18 bin directory.
+ASSURGRID_TEST_POSTGRES_BIN=/opt/homebrew/opt/postgresql@18/bin \
+  python -m pytest backend/tests -x --tb=short
+```
+
+The integration fixture creates and stops its own temporary PostgreSQL cluster, listens only on a private Unix socket, and removes its temporary files afterward. It does not connect to the development database or use its credentials. These tests require a Unix-like environment with permission to start PostgreSQL and allocate shared memory. They verify migrations, sample insert/read, organization-scoped CI uniqueness, foreign keys, required fields, independent states, and transaction rollback. See [architecture notes](docs/demo/ARCHITECTURE_NOTES.md) and the [current demo steps](docs/demo/DEMO_SCRIPT.md).
 
 ## 7. Install frontend dependencies
 
@@ -196,11 +204,11 @@ Browser → React → FastAPI → SQLAlchemy → psycopg → PostgreSQL
 ## Layout
 
 - `backend/app/`: application assembly, typed settings, health routes, database sessions
-- `backend/migrations/`: Alembic configuration and empty baseline revision
-- `backend/tests/`: isolated API tests
+- `backend/migrations/`: Alembic configuration, original baseline, and registry migration
+- `backend/tests/`: isolated API tests and disposable PostgreSQL integration tests
 - `frontend/src/`: API helper, route, React entry point, minimal styles
 - `infra/compose.yaml`: PostgreSQL only
 - `prod-docs/`: preserved product and architecture source documents
 - `docs/AG-03_Implementation_Report.md`: implementation and verification evidence
 
-No AG-04 or business functionality is implemented.
+AG-04 and user-facing business workflows are not implemented. The registry schema is the first domain slice.
