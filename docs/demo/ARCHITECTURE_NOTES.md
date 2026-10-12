@@ -31,3 +31,11 @@ The seed is an explicit development command for a local database named `assurgri
 CSV exports include synthetic source labels and a versioned manifest with the date, timezone, counts, and hashes. They are generated inspection artifacts, not an implemented CSV ingestion pipeline. Database descriptions retain the synthetic label; dedicated import/source tables arrive later. Seeds do not claim to produce business audit evidence.
 
 Tests exercise the actual CLI twice against a disposable demo database, verify stable contents, reject altered datasets, and compare exports byte-for-byte with the checked-in snapshot. See [data instructions](../../mock-data/README.md) for safety boundaries and reproducible commands.
+
+## Slice 04 — Organization-scoped registry API
+
+The applications module separates typed API contracts, HTTP handling, and explicit SQLAlchemy Core queries. Filters bind values as query parameters; search escapes SQL wildcard characters. One CTE-based query returns both the filtered total and requested page from a consistent snapshot, including counts for empty pages. Every list/detail query includes the server-selected organization ID.
+
+The API is intentionally disabled unless a development organization scope is configured. Authentication is not implemented yet: any caller who can reach the enabled local API can read the selected scope. This temporary dependency must become authenticated session membership/assignment enforcement in Slice 06. No protected-production-use or finalized AG-04 claim is made.
+
+Owner IDs are nullable response fields and return null until the user/assignment schema exists. Governance health is omitted until policies and concrete obligations support it. No new migration or data writes are included. PostgreSQL API tests cover actual seeded reads, pagination, filter combinations, literal/injection-shaped searches, missing IDs, cross-organization isolation, and safe failures.

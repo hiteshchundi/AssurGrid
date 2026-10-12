@@ -8,9 +8,9 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The registry schema and an optional deterministic seed of one fictional organization and 48 applications are implemented. The setup below runs the foundation and applies the current schema; seeding is an explicit separate step.
+**Working UI: AG-03 foundation status.** React displays API and database connection status using FastAPI health endpoints, synchronous SQLAlchemy/psycopg access, and PostgreSQL. The registry schema, optional deterministic seed of one fictional organization and 48 applications, and opt-in read-only registry API are implemented. The setup below runs the foundation and applies the current schema; seeding and API scope configuration are explicit separate steps.
 
-The registry API and screens, login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only.
+The registry screens, login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet.
 
 ## Prototype scope and data
 
@@ -97,6 +97,25 @@ uvicorn app.main:app --reload --host localhost --port 8000
 ```
 
 The liveness endpoint does not connect to PostgreSQL. Readiness uses a synchronous SQLAlchemy session to execute `SELECT 1` through psycopg. Connection failures return HTTP 503 and a safe JSON body, and log the exception type without credentials.
+
+### Optional local registry API
+
+After seeding `assurgrid_demo`, keep its `DATABASE_URL` environment override and set the following before starting/restarting FastAPI:
+
+```sh
+export APP_ENV=development
+export DEMO_REGISTRY_ORGANIZATION_ID=becdd76c-490f-52a1-9247-9f6a6845d774
+uvicorn app.main:app --reload --host localhost --port 8000
+```
+
+This UUID is the fictional organization in `mock-data/generated/organizations.csv`. The registry returns HTTP 503 if the scope is unset or `APP_ENV` is `test` or `production`. `APP_ENV` defaults to `development`; scope is unset by default. Anyone who can reach an enabled API can read that configured scope, so keep this unauthenticated prototype local and use synthetic data only. This is a temporary development boundary, not RBAC.
+
+```sh
+curl 'http://localhost:8000/api/v1/applications?search=NSB-LIMS-001'
+curl 'http://localhost:8000/api/v1/applications?classification=Non-GxP&page_size=100'
+```
+
+Expect one LIMS result and seven non-GxP results from the frozen seed. Open `/api/v1/applications/{id}` using an item's UUID to inspect it. See the [registry API contract](docs/demo/REGISTRY_API.md) for fields, filters, status codes, and limitations.
 
 ## 6. Run backend tests
 
@@ -214,4 +233,4 @@ Browser → React → FastAPI → SQLAlchemy → psycopg → PostgreSQL
 - `docs/AG-03_Implementation_Report.md`: implementation and verification evidence
 - `mock-data/`: synthetic registry snapshots, source manifest, and safe seed instructions
 
-AG-04 and user-facing business workflows are not implemented. The registry schema and synthetic seed are the first domain slices.
+AG-04 and user-facing business workflows are not implemented. The registry schema, synthetic seed, and read-only API are the first domain slices.

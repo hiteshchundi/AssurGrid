@@ -1,5 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
+from uuid import UUID
 
 from pydantic import Field, HttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -15,6 +17,8 @@ class Settings(BaseSettings):
 
     database_url: str = Field(repr=False)
     frontend_origin: HttpUrl
+    app_env: Literal["development", "test", "production"] = "development"
+    demo_registry_organization_id: UUID | None = None
 
     @field_validator("database_url")
     @classmethod
