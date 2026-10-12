@@ -3,12 +3,25 @@ from uuid import UUID
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
-from app.db.schema import regulated_application as application
+from app.db.schema import regulated_application as application, application_access
+from app.modules.auth.router import Principal
 from app.modules.applications.schemas import ApplicationFilters
 
 
-def list_applications(session: Session, organization_id: UUID, filters: ApplicationFilters):
-    conditions = [application.c.organization_id == organization_id]
+def access_condition(principal: Principal):
+    if principal.role in ("Admin", "Quality"):
+        return sa.true()
+    if principal.role not in ("Application Owner", "Viewer"):
+        return sa.false()
+    return sa.exists(sa.select(1).where(
+        application_access.c.organization_id == principal.organization_id,
+        application_access.c.user_id == principal.user_id,
+        application_access.c.application_id == application.c.id,
+    ))
+
+
+def list_applications(session: Session, organization_id: UUID, filters: ApplicationFilters, principal: Principal):
+    conditions = [application.c.organization_id == organization_id, access_condition(principal)]
     if filters.search:
         conditions.append(sa.or_(
             application.c.ci_id.icontains(filters.search, autoescape=True),
@@ -42,8 +55,8 @@ def list_applications(session: Session, organization_id: UUID, filters: Applicat
     }
 
 
-def get_application(session: Session, organization_id: UUID, application_id: UUID):
+def get_application(session: Session, organization_id: UUID, application_id: UUID, principal: Principal):
     return session.execute(sa.select(application).where(
         application.c.organization_id == organization_id,
-        application.c.id == application_id,
+        application.c.id == application_id, access_condition(principal),
     )).mappings().one_or_none()

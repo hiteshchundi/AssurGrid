@@ -8,9 +8,9 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Working UI: application registry and details, plus AG-03 foundation status.** React displays real database-backed registry records through the opt-in read-only API. Search, filters, pagination, and application details work with the deterministic 48-application seed. The setup below runs the foundation and applies the current schema; seeding and API scope configuration are explicit separate steps.
+**Registry UI and backend session authentication are implemented; login UI and demo account setup are next.** The API now requires an authenticated session and checks current organization role and application assignments. The existing registry screens cannot complete the browser demo until the login integration arrives. Foundation status remains available.
 
-Identity storage now includes accounts, organization memberships, application access, and browser sessions. No accounts or sessions are seeded yet. Login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet. Governance is shown as unavailable, and ownership as not recorded, rather than inventing values.
+Identity storage includes accounts, memberships, application access, and browser sessions. No accounts or sessions are seeded automatically. Policies, obligations, governance dashboard, and change/QA workflow remain planned. Governance is unavailable and ownership is not recorded. See the [authentication contract and verification](docs/demo/AUTH_API.md).
 
 ## Prototype scope and data
 
@@ -98,9 +98,9 @@ uvicorn app.main:app --reload --host localhost --port 8000
 
 The liveness endpoint does not connect to PostgreSQL. Readiness uses a synchronous SQLAlchemy session to execute `SELECT 1` through psycopg. Connection failures return HTTP 503 and a safe JSON body, and log the exception type without credentials.
 
-### Optional local registry API
+### Local authenticated registry API
 
-After seeding `assurgrid_demo`, keep its `DATABASE_URL` environment override and set the following before starting/restarting FastAPI:
+The variables below configure the development login organization; they no longer enable anonymous registry reads. Demo account setup and browser login are still pending. After seeding `assurgrid_demo`, keep its `DATABASE_URL` environment override and set the following before starting/restarting FastAPI:
 
 ```sh
 export APP_ENV=development
@@ -108,7 +108,7 @@ export DEMO_REGISTRY_ORGANIZATION_ID=becdd76c-490f-52a1-9247-9f6a6845d774
 uvicorn app.main:app --reload --host localhost --port 8000
 ```
 
-This UUID is the fictional organization in `mock-data/generated/organizations.csv`. The registry returns HTTP 503 if the scope is unset or `APP_ENV` is `test` or `production`. `APP_ENV` defaults to `development`; scope is unset by default. Anyone who can reach an enabled API can read that configured scope, so keep this unauthenticated prototype local and use synthetic data only. This is a temporary development boundary, not RBAC.
+This UUID identifies the fictional organization in `mock-data/generated/organizations.csv`. Login returns 503 if that scope is unset or `APP_ENV` is not `development`. Registry reads require an active session and authorized application scope; a missing session returns 401. Keep the password-login prototype local and use synthetic data only. The provisional role matrix does not finalize AG-04.
 
 ```sh
 curl 'http://localhost:8000/api/v1/applications?search=NSB-LIMS-001'

@@ -1,3 +1,5 @@
+> Slice 06b update: registry API access now requires a session. Browser login and demo account setup are pending; the registry walkthrough below records Slice 05 and cannot yet be replayed end-to-end. See [auth status](AUTH_API.md).
+
 # Current AssurGrid demonstration
 
 ## Available through Slice 05

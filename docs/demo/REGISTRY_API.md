@@ -1,6 +1,6 @@
 # Read-only registry API — Slice 04
 
-This API is an opt-in, unauthenticated local development capability for synthetic data. It is disabled unless `APP_ENV=development` and `DEMO_REGISTRY_ORGANIZATION_ID` is set. The backend applies that organization ID to every registry query; clients cannot choose another organization. This is not user authorization. Slice 06 must replace the temporary scope dependency with authenticated membership/assignment checks before protected use.
+Registry reads require a valid server-managed session. Admin/Quality see their organization; Application Owner/Viewer see assigned applications only. See [authentication](AUTH_API.md) for login, cookies, CSRF, and current limitations. The Slice 04 temporary unauthenticated development scope has been removed.
 
 ## List applications
 
@@ -28,13 +28,13 @@ The path takes the internal UUID, not CI ID. Search by CI first to obtain the UU
 
 Each application contains `id`, `organization_id`, `ci_id`, `name`, `system_type`, `description`, `gxp_classification`, `criticality`, `lifecycle_state`, `validation_state`, `supplier`, `platform`, `created_at`, and `updated_at`. UUIDs serialize as strings and timestamps as ISO 8601 values. Optional metadata can be null.
 
-`business_owner_id`, `technical_owner_id`, and `quality_owner_id` currently return null because identity/ownership records do not exist yet. No owner names, assignments, or governance-health values are fabricated. Governance health will require the policy and obligation slices.
+`business_owner_id`, `technical_owner_id`, and `quality_owner_id` currently return null because ownership relationships are not implemented yet. No owner names, assignments, or governance-health values are fabricated. Governance health will require the policy and obligation slices.
 
 ## Failure and write behavior
 
-- Disabled/unconfigured scope: HTTP 503 with a safe explanation.
+- Missing, expired, revoked, or inactive session: HTTP 401.
 - Database failure: HTTP 503, `Application registry is temporarily unavailable.`; logs include only the exception class, not SQL/credentials.
-- Invalid list inputs or path UUID: HTTP 422 when the registry is enabled.
+- Invalid list inputs or path UUID: HTTP 422 when authenticated.
 - No matching list records: HTTP 200 with an empty list.
 - Missing/out-of-scope detail: HTTP 404.
 - POST/PATCH/DELETE are not implemented; HTTP 405 for these methods on the registry resources.

@@ -10,6 +10,7 @@ from app.db.schema import organization, regulated_application
 from app.db.session import get_session
 from app.demo.registry import build_registry, seed_registry
 from app.main import app
+from app.modules.auth.router import Principal, get_principal
 from .test_registry_schema import insert_application, insert_organization
 
 AS_OF = date(2026, 10, 12)
@@ -19,6 +20,7 @@ ORG, APPLICATIONS = build_registry(AS_OF)
 @pytest.fixture
 def registry_client(client, registry_connection):
     seed_registry(registry_connection, AS_OF)
+    app.dependency_overrides[get_principal] = lambda: Principal(uuid4(), ORG["id"], "Admin", uuid4(), "a" * 64)
     settings = Settings(
         _env_file=None, database_url="postgresql+psycopg://test:test@localhost:1/test",
         frontend_origin="http://localhost:5173", app_env="development",

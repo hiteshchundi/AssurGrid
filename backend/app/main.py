@@ -9,7 +9,8 @@ app = FastAPI(title="AssurGrid", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(settings.frontend_origin).rstrip("/")],
-    allow_methods=["GET"],
-    allow_headers=["Accept"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Accept", "Content-Type", "X-CSRF-Token"],
 )
 app.include_router(api_router)
