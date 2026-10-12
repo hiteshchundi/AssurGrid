@@ -10,7 +10,7 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 **Working UI: application registry and details, plus AG-03 foundation status.** React displays real database-backed registry records through the opt-in read-only API. Search, filters, pagination, and application details work with the deterministic 48-application seed. The setup below runs the foundation and applies the current schema; seeding and API scope configuration are explicit separate steps.
 
-Login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet. Governance is shown as unavailable, and ownership as not recorded, rather than inventing values.
+Identity storage now includes accounts, organization memberships, application access, and browser sessions. No accounts or sessions are seeded yet. Login, policies, obligations, governance dashboard, and change/QA workflow are planned; they are not implemented yet. The current demo dataset contains registry records only. The development registry API has server-configured organization scope, but no user authentication or role-based authorization yet. Governance is shown as unavailable, and ownership as not recorded, rather than inventing values.
 
 ## Prototype scope and data
 
@@ -84,7 +84,7 @@ alembic -c backend/alembic.ini upgrade head
 alembic -c backend/alembic.ini current
 ```
 
-The expected revision is `0002_application_registry`. The original empty `0001_foundation` baseline is preserved; the new migration adds `public.organization` and `public.regulated_application` with no seed rows. Alembic and FastAPI use the same environment settings. Upgrading adds tables without replacing existing data. Downgrading this registry migration drops both tables and their records; use downgrade only in a disposable database.
+The expected revision is `0003_identity`. The original empty `0001_foundation` baseline is preserved. Migration `0002_application_registry` adds organization and application tables; `0003_identity` adds accounts, memberships, application access, and session storage without seed rows. Alembic and FastAPI use the same environment settings. Upgrading preserves existing registry data. Downgrading 0003 removes identity data but preserves the registry; downgrading 0002 removes registry data too. Use downgrade only in a disposable database.
 
 ## 5. Start FastAPI
 

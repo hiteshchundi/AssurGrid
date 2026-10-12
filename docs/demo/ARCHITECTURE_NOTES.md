@@ -47,3 +47,17 @@ The default route now opens the registry; foundation health remains accessible a
 The UI distinguishes loading, empty, invalid/missing record, and unavailable states; a failed refetch suppresses stale records. It provides a synthetic-data banner, semantic labels/table headings, keyboard controls, and a horizontally scrollable table on narrow screens. Governance is unavailable rather than a fake Current badge, and missing owner IDs are not converted into invented people. Timestamp presentation uses the browser timezone without calculating business status.
 
 The React review covered hook order, stable row keys, label associations, focus indicators, direct imports, and use of TanStack Query rather than manual fetch effects. No dependencies were added. See [Slice 05 verification](SLICE_05_VERIFICATION.md) for actual browser checks.
+
+## Slice 06a — Identity storage and relational constraints
+
+Migration `0003_identity` prepares the storage needed to answer who belongs to an organization and which applications they may access. It adds `user_account`, `membership`, `application_access`, and `browser_session`. It does not enable login or change the current development API scope.
+
+Accounts use unique lowercase, whitespace-free email identifiers, nonblank display names/password-hash fields, active flags, and timestamps. Email checks are a prototype canonicalization convention, not full email validation. The database cannot verify password hashing: the future login/seed service must generate real salted password hashes and never persist plaintext. No accounts, credentials, or sessions are seeded in this slice.
+
+Membership has one role per organization/user pair: `Admin`, `Quality`, `Application Owner`, or `Viewer`. These names follow the provisional demo matrix, not a finalized AG-04 enterprise authorization model. Users can belong to multiple organizations. An active flag allows later suspension without deletion. Future request dependencies must resolve current account and membership activity and role on every request.
+
+Application access references both the organization/user membership and the organization/application pair. A composite unique constraint on applications enables the latter FK, preventing cross-organization assignments. Access grants do not represent business, technical, or quality ownership; the API's owner fields remain null. Admin/Quality portfolio scope and owner/viewer assigned scope will be enforced by later services.
+
+Sessions store unique 64-character lowercase hex token digests, CSRF digests, membership references, creation/expiry/revocation timestamps, and no copied role. Digest shape checks cannot prove cryptographic generation. The future authentication service must generate unpredictable tokens, hash them, enforce expiry/revocation, and set cookie/CSRF protections. Membership and account restrictions are not enforced by this storage alone. Identity FKs restrict deletion; future services must explicitly revoke/remove dependent rows as appropriate.
+
+The migration is independent of live metadata. Upgrade preserves existing registry rows; downgrade removes the four identity tables and the added application unique constraint, preserving registry rows. No owner database or `.env` was changed. Existing reproducible exports remain unchanged. See [Slice 06a verification](SLICE_06A_VERIFICATION.md).

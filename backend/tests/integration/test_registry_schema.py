@@ -49,7 +49,7 @@ def test_fresh_migration_and_repeat_upgrade_preserve_records(registry_connection
     assert row["created_at"].utcoffset() == timedelta(0)
     assert row["updated_at"] == row["created_at"]
     assert "governance_health" not in row and "status" not in row
-    assert connection.execute(sa.text("SELECT version_num FROM alembic_version")).scalar_one() == "0002_application_registry"
+    assert connection.execute(sa.text("SELECT version_num FROM alembic_version")).scalar_one() == "0003_identity"
 
 
 def test_migration_matches_core_definitions(registry_connection):
@@ -63,6 +63,7 @@ def test_downgrade_and_upgrade_in_disposable_database(registry_connection):
     command.upgrade(config, "head")
     assert set(sa.inspect(registry_connection).get_table_names()) == {
         "alembic_version", "organization", "regulated_application",
+        "user_account", "membership", "application_access", "browser_session",
     }
 
 
