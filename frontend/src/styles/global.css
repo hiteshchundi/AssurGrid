@@ -101,3 +101,14 @@ dd.connected { color: #216650; }
   .detail-card { padding: 20px; } .foundation-panel { padding: 24px; margin: 0 auto; }
   .foundation-footer { align-items: start; flex-direction: column; }
 }
+.login-panel { max-width: 480px; margin: 48px auto; padding: 32px; }
+.login-panel h1 { font-size: 28px; }
+.login-panel > p { color: #53666b; line-height: 1.6; }
+.login-panel form { display: grid; gap: 12px; margin: 28px 0 20px; }
+.login-panel form label { font-weight: 600; font-size: 14px; }
+.login-panel form input { width: 100%; min-width: 0; }
+.login-panel form button { margin-top: 12px; }
+.login-note { font-size: 13px; }
+.session-control { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; }
+.session-control [role="alert"] { flex-basis: 100%; color: #873b30; }
+@media (max-width: 700px) { .login-panel { margin: 16px auto; padding: 24px; } }

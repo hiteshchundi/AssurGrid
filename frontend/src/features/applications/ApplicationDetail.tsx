@@ -1,3 +1,4 @@
+import { useIdentity } from '../auth/Auth';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router';
 import { getApplication, RegistryError } from '../../api/applications';
@@ -10,10 +11,11 @@ function timestamp(value: string) {
 }
 
 export function ApplicationDetail() {
+  const { identity } = useIdentity();
   const { id = '' } = useParams();
   const { search } = useLocation();
   const query = useQuery({
-    queryKey: ['application', id], queryFn: ({ signal }) => getApplication(id, signal),
+    queryKey: ['application', identity?.user_id, identity?.role, id], queryFn: ({ signal }) => getApplication(id, signal),
     refetchInterval: false, staleTime: 30000,
   });
   const item = query.data;

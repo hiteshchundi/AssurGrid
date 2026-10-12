@@ -142,3 +142,16 @@ def test_database_errors_are_safe(auth_client, caplog):
     assert response.status_code == 503
     assert "private" not in response.text + caplog.text
     session.rollback.assert_called_once()
+
+
+def test_csrf_recovery_requires_origin_and_rotates_token(auth_client):
+    client, *_ = auth_client
+    old = login(client).json()['csrf_token']
+    assert client.post('/api/v1/auth/csrf').status_code == 403
+    response = client.post('/api/v1/auth/csrf', headers=ORIGIN)
+    assert response.status_code == 200 and response.headers['cache-control'] == 'no-store'
+    new = response.json()['csrf_token']
+    assert new != old
+    assert client.post('/api/v1/auth/logout', headers={**ORIGIN, 'X-CSRF-Token':old}).status_code == 403
+    assert client.post('/api/v1/auth/logout', headers={**ORIGIN, 'X-CSRF-Token':new}).status_code == 204
+    assert client.post('/api/v1/auth/csrf', headers=ORIGIN).status_code == 401

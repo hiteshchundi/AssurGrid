@@ -1,6 +1,6 @@
 # Slice 06b — backend session authentication
 
-This slice replaces unauthenticated registry access with server-managed sessions. It does not add a login screen or seed credentials; those are the next slice. The existing browser registry therefore cannot complete its normal demo journey yet. Foundation health remains public.
+Slice 06b replaced unauthenticated registry access with server-managed sessions. Slice 06c now adds the login screen and explicit [demo account setup](DEMO_ACCOUNTS.md). Foundation health remains public.
 
 `POST /api/v1/auth/login` accepts only `email` and `password`. It requires the configured `FRONTEND_ORIGIN` in the Origin header, `APP_ENV=development`, and `DEMO_REGISTRY_ORGANIZATION_ID`. Active accounts must have active membership in that organization. The client cannot supply its own role or organization. Passwords use salted scrypt hashes; no plaintext password or raw session token is stored. Unknown users and incorrect passwords share the same 401 response, with a dummy password calculation for unknown accounts. Validation errors do not echo submitted passwords.
 
@@ -10,7 +10,7 @@ A successful login creates an eight-hour opaque session and returns `csrf_token`
 
 Registry reads now derive organization scope from that session. Admin and Quality can read their organization's portfolio; Application Owner and Viewer can read only explicitly assigned applications. Both page counts and detail reads enforce this scope. Missing, foreign, and unassigned IDs return the same 404. Access assignment does not imply business/technical/quality ownership. No registry mutation endpoint is introduced, so role-based mutation tests await those endpoints. Future writes must use both role authorization and the shared CSRF check.
 
-CORS allows credentials only for the existing configured frontend origin, with GET/POST and Accept, Content-Type, X-CSRF-Token. Frontend credentialed requests, login UX, four-category demo account setup, and CSRF recovery after page reload are next-slice work. Production password login is disabled; this remains a localhost prototype with no login throttling, password recovery, SSO, or production authentication claim.
+CORS allows credentials only for the existing configured frontend origin, with GET/POST and Accept, Content-Type, X-CSRF-Token. The frontend now sends credentialed requests and provides login/logout. `POST /api/v1/auth/csrf` requires a current session and trusted Origin and rotates the session CSRF digest, returning a fresh token with no-store. The UI obtains this token immediately before logout, including after reload; no token is stored in localStorage. Concurrent rotations from another tab can cause a safe 403; retry sign-out to obtain a fresh token. Production password login is disabled; this remains a localhost prototype with no login throttling, password recovery, SSO, or production authentication claim.
 
 ## Verification
 

@@ -65,3 +65,11 @@ The migration is independent of live metadata. Upgrade preserves existing regist
 ## Slice 06b — Backend sessions and registry authorization
 
 The temporary anonymous development scope is replaced with a session principal. The applications repository applies organization scope plus an assignment EXISTS predicate for owners/viewers to both count/page and detail queries. Current role/activity comes from joined membership/account rows on every request. Login/logout persist session creation/revocation transactionally; plaintext tokens never enter storage. No schema change or seeded account is included. See [auth contract](AUTH_API.md) for endpoint behavior, verification, and the pending frontend/account setup.
+
+## Slice 06c — Browser login and explicit demo identities
+
+The login form establishes the HttpOnly session and reads the current principal through TanStack Query. Protected routes retain their requested application URL through sign-in. Session errors hide protected content, registry 401 responses clear cached records, and login/logout cancel queries and remove prior account data. Application query keys include user ID and role. The header exposes current role and sign-out; cookies carry authentication, while CSRF tokens are obtained with an Origin-checked POST and held only for the pending logout request.
+
+The separate account CLI requires an explicitly confirmed local `assurgrid_demo` target and hidden interactive password prompts. Four stable UUID identities and the existing application CI IDs define reproducible access. Password hashes use random salts and are preserved on repeat runs, so credentials are intentionally not byte-reproducible. Edited identities, passwords, roles, activity, or extra access cause refusal rather than overwrite; missing expected records are inserted transactionally. No password exports or production account provisioning are implemented.
+
+See [account setup](DEMO_ACCOUNTS.md) and [verification](SLICE_06C_VERIFICATION.md). No migration, owner database change, or registry fixture regeneration was needed.

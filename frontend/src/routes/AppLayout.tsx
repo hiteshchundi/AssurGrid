@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router';
+import { SessionControl } from '../features/auth/Auth';
 
 export function AppLayout() {
   return (
@@ -12,7 +13,7 @@ export function AppLayout() {
           <NavLink to="/applications">Application registry</NavLink>
           <NavLink to="/foundation">Foundation status</NavLink>
         </nav>
-        <span className="prototype-label">Local prototype</span>
+        <SessionControl />
       </header>
       <div className="demo-banner"><strong>SYNTHETIC DEMO DATA</strong><span>Fictional records for demonstration. Read-only access.</span></div>
       <main id="main-content" tabIndex={-1}><Outlet /></main>

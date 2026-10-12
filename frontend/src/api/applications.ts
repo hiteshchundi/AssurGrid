@@ -49,6 +49,7 @@ async function request(path: string, signal: AbortSignal): Promise<unknown> {
   let response: Response;
   try {
     response = await fetch(`${baseUrl}${path}`, {
+      credentials: 'include', cache: 'no-store',
       signal: AbortSignal.any([signal, AbortSignal.timeout(5000)]),
     });
   } catch (error) {
@@ -56,6 +57,10 @@ async function request(path: string, signal: AbortSignal): Promise<unknown> {
     throw new RegistryError('The registry could not be reached. Check the API connection, then try again.');
   }
   if (!response.ok) {
+    if (response.status === 401) {
+      window.dispatchEvent(new Event('assurgrid-session-expired'));
+      throw new RegistryError('Your session has ended. Please sign in again.', 401);
+    }
     if (response.status === 404) throw new RegistryError('This application was not found in the configured organization.', 404);
     if (response.status === 422) throw new RegistryError('The filters or application address are invalid. Clear the filters or return to the registry.', 422);
     if (response.status === 503) throw new RegistryError('The registry is unavailable. Check the database and local demo organization configuration.', 503);

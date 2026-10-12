@@ -151,3 +151,21 @@ def logout(request: Request, response: Response,
     response.delete_cookie(COOKIE, path="/api/v1", httponly=True,
                            secure=settings.frontend_origin.scheme == "https", samesite="strict")
     response.headers["Cache-Control"] = "no-store"
+
+
+@router.post("/csrf")
+def refresh_csrf(request: Request, response: Response,
+                 principal: Annotated[Principal, Depends(get_principal)],
+                 settings: Annotated[Settings, Depends(get_settings)],
+                 session: Annotated[Session, Depends(get_session)]):
+    # Origin protects this bootstrap endpoint; no token is persisted by the browser.
+    require_origin(request, settings)
+    csrf = secrets.token_urlsafe(32)
+    try:
+        session.execute(browser_session.update().where(browser_session.c.id == principal.session_id).values(csrf_token_hash=token_hash(csrf)))
+        session.commit()
+    except SQLAlchemyError:
+        session.rollback()
+        raise HTTPException(503, "Authentication is temporarily unavailable.") from None
+    response.headers["Cache-Control"] = "no-store"
+    return {"csrf_token": csrf}

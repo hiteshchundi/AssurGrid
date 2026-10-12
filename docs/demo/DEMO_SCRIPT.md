@@ -1,4 +1,5 @@
-> Slice 06b update: registry API access now requires a session. Browser login and demo account setup are pending; the registry walkthrough below records Slice 05 and cannot yet be replayed end-to-end. See [auth status](AUTH_API.md).
+> Slice 06c: first follow [demo account setup](DEMO_ACCOUNTS.md), then open `http://localhost:5173` and sign in. Admin and Quality see all 48 registry applications; Owner sees 3 and Viewer sees 1. Use Admin for the full registry walkthrough below. Reload preserves the session; Sign out returns to the login screen and revokes the session.
+
 
 # Current AssurGrid demonstration
 

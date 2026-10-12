@@ -1,3 +1,4 @@
+import { useIdentity } from '../auth/Auth';
 import type { FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router';
@@ -11,10 +12,11 @@ const filterOptions = [
 ];
 
 export function ApplicationRegistry() {
+  const { identity } = useIdentity();
   const [params, setParams] = useSearchParams();
   const queryString = params.toString();
   const query = useQuery({
-    queryKey: ['applications', queryString], queryFn: ({ signal }) => getApplications(queryString, signal),
+    queryKey: ['applications', identity?.user_id, identity?.role, queryString], queryFn: ({ signal }) => getApplications(queryString, signal),
     refetchInterval: false, staleTime: 30000,
   });
 

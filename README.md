@@ -8,9 +8,9 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Registry UI and backend session authentication are implemented; login UI and demo account setup are next.** The API now requires an authenticated session and checks current organization role and application assignments. The existing registry screens cannot complete the browser demo until the login integration arrives. Foundation status remains available.
+**Working prototype: sign-in, role-scoped registry list/details, and foundation status.** The API checks current session, organization membership, and application access on every read. Admin/Quality see the fictional portfolio; Owner/Viewer see their assigned applications. Login/logout and session reload are integrated into the browser.
 
-Identity storage includes accounts, memberships, application access, and browser sessions. No accounts or sessions are seeded automatically. Policies, obligations, governance dashboard, and change/QA workflow remain planned. Governance is unavailable and ownership is not recorded. See the [authentication contract and verification](docs/demo/AUTH_API.md).
+Registry seeding and four-category demo account setup are explicit local commands. No passwords are checked in or assigned automatically. Policies, obligations, governance dashboard, and change/QA workflow remain planned. Governance is unavailable and business/technical/quality ownership is not recorded. See [demo account setup](docs/demo/DEMO_ACCOUNTS.md) and [Slice 06c verification](docs/demo/SLICE_06C_VERIFICATION.md).
 
 ## Prototype scope and data
 
@@ -100,7 +100,7 @@ The liveness endpoint does not connect to PostgreSQL. Readiness uses a synchrono
 
 ### Local authenticated registry API
 
-The variables below configure the development login organization; they no longer enable anonymous registry reads. Demo account setup and browser login are still pending. After seeding `assurgrid_demo`, keep its `DATABASE_URL` environment override and set the following before starting/restarting FastAPI:
+The variables below configure the development login organization. After registry seeding, run the [demo account setup](docs/demo/DEMO_ACCOUNTS.md) before signing in. After seeding `assurgrid_demo`, keep its `DATABASE_URL` environment override and set the following before starting/restarting FastAPI:
 
 ```sh
 export APP_ENV=development
