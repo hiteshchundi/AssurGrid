@@ -8,7 +8,7 @@ The fixed ordered catalog generates one organization and 48 distinct application
 
 The first seven CI IDs reserve the required demo identities: `NSB-LIMS-001`, `NSB-CDMS-002`, `NSB-QMS-003`, `NSB-MES-004`, `NSB-SAFETY-005`, `NSB-ERP-006`, and `NSB-ATR-007`. Their future overdue/due-soon, change, finding, document, and override stories are not implemented or inferred from these rows. No governance-health field is stored.
 
-Only currently implemented tables are seeded. Users, owners, passwords, policies, obligations, changes, audit events, imports, and public-reference records are absent. Seed rows are initialization fixtures, not simulated audit events.
+The registry command seeds registry tables only. Separate commands provide [synthetic accounts](../docs/demo/DEMO_ACCOUNTS.md) and [synthetic policies](../docs/demo/DEMO_POLICIES.md). Passwords are never exported. Owners, obligations, changes, audit events, imports, and public-reference records are absent. Seed rows are initialization fixtures, not simulated audit events.
 
 ## Inspect or regenerate without a database
 
@@ -75,3 +75,7 @@ ASSURGRID_TEST_POSTGRES_BIN=/opt/homebrew/opt/postgresql@18/bin \
 ```
 
 Use your installed PostgreSQL 18 binary directory. Tests create their own temporary cluster and verify two CLI runs, stable counts/identities/dates, no orphan applications, transaction rollback, partial matching-data completion, unsafe-target rejection, changed-data refusal, and exact CSV/manifest reproducibility. The ordinary no-database test run still checks fixture generation and target guards.
+
+## Policy v1 — Slice 07b
+
+`generated/policies.json` is a deterministic, separately labeled policy fixture: four controls, two profiles, three effective versions, and ten rules. It uses fixed fictional dates and UUIDv5 identifiers. Its initialization timestamp is invented and does not prove historical approval. This JSON is an inspection artifact, not an implemented import feed. The existing registry manifest covers its two CSV files only. See [policy setup and frequencies](../docs/demo/DEMO_POLICIES.md).

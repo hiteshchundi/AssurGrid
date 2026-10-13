@@ -1,0 +1,219 @@
+{
+  "counts": {
+    "control_definition": 4,
+    "governance_policy": 2,
+    "policy_control_rule": 10,
+    "policy_version": 3
+  },
+  "label": "SYNTHETIC DEMO DATA",
+  "policy_notice": "Illustrative organization rules, not regulatory requirements.",
+  "seed_version": "policy-v1",
+  "snapshot_date": "2026-10-12",
+  "tables": {
+    "control_definition": [
+      {
+        "active": true,
+        "control_key": "PCR",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "description": "SYNTHETIC DEMO DATA \u2014 fictional organization control; not a mandated regulatory frequency.",
+        "id": "89fed116-38ca-517d-b3fb-37de2b69d272",
+        "name": "Periodic Compliance Review",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774"
+      },
+      {
+        "active": true,
+        "control_key": "ACCESS_REVIEW",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "description": "SYNTHETIC DEMO DATA \u2014 fictional organization control; not a mandated regulatory frequency.",
+        "id": "42bdeb0e-610b-5f59-84b9-cc73b5a7034f",
+        "name": "Access Review",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774"
+      },
+      {
+        "active": true,
+        "control_key": "ATR",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "description": "SYNTHETIC DEMO DATA \u2014 fictional organization control; not a mandated regulatory frequency.",
+        "id": "d21f62d9-74e8-516e-86bb-92913f62aa01",
+        "name": "Audit Trail Review",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774"
+      },
+      {
+        "active": true,
+        "control_key": "SUPPLIER_REVIEW",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "description": "SYNTHETIC DEMO DATA \u2014 fictional organization control; not a mandated regulatory frequency.",
+        "id": "fde4829d-b23d-5b33-bf80-5801a85502ce",
+        "name": "Supplier Review",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774"
+      }
+    ],
+    "governance_policy": [
+      {
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "id": "0d64a64a-699a-5b68-9b0b-be2e96583bd8",
+        "name": "Synthetic High-Criticality GxP",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_key": "HIGH_GXP"
+      },
+      {
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "id": "4e54df59-1f43-5ec3-a8f9-14ba38a49152",
+        "name": "Synthetic Medium-Criticality GxP",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_key": "MEDIUM_GXP"
+      }
+    ],
+    "policy_control_rule": [
+      {
+        "control_definition_id": "89fed116-38ca-517d-b3fb-37de2b69d272",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic PCR completion reference reviewed by the responsible role.",
+        "frequency_months": 24,
+        "id": "946e7d98-df2d-5b46-8363-f7425c0dcb78",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "2da706c2-d7d5-5c77-93fc-509f46d58f85"
+      },
+      {
+        "control_definition_id": "42bdeb0e-610b-5f59-84b9-cc73b5a7034f",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic ACCESS_REVIEW completion reference reviewed by the responsible role.",
+        "frequency_months": 3,
+        "id": "08708aa1-beb0-585a-84ac-57cae8673fef",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "2da706c2-d7d5-5c77-93fc-509f46d58f85"
+      },
+      {
+        "control_definition_id": "d21f62d9-74e8-516e-86bb-92913f62aa01",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic ATR completion reference reviewed by the responsible role.",
+        "frequency_months": 3,
+        "id": "8b477151-31c9-5439-8437-9cbe6e4485e4",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "2da706c2-d7d5-5c77-93fc-509f46d58f85"
+      },
+      {
+        "control_definition_id": "fde4829d-b23d-5b33-bf80-5801a85502ce",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic SUPPLIER_REVIEW completion reference reviewed by the responsible role.",
+        "frequency_months": 24,
+        "id": "97bb1b2c-308a-506d-843a-7e229b780221",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "2da706c2-d7d5-5c77-93fc-509f46d58f85"
+      },
+      {
+        "control_definition_id": "89fed116-38ca-517d-b3fb-37de2b69d272",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic PCR completion reference reviewed by the responsible role.",
+        "frequency_months": 12,
+        "id": "7e94d028-9a7c-515f-8dd5-44b48a5253bf",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "02904f7f-18f9-5447-a9f7-1839fca39fd3"
+      },
+      {
+        "control_definition_id": "42bdeb0e-610b-5f59-84b9-cc73b5a7034f",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic ACCESS_REVIEW completion reference reviewed by the responsible role.",
+        "frequency_months": 3,
+        "id": "6c324033-92cc-51bf-8e19-da2de908a886",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "02904f7f-18f9-5447-a9f7-1839fca39fd3"
+      },
+      {
+        "control_definition_id": "d21f62d9-74e8-516e-86bb-92913f62aa01",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic ATR completion reference reviewed by the responsible role.",
+        "frequency_months": 3,
+        "id": "5248395e-8bf0-5307-8d8c-90bfae921991",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "02904f7f-18f9-5447-a9f7-1839fca39fd3"
+      },
+      {
+        "control_definition_id": "fde4829d-b23d-5b33-bf80-5801a85502ce",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic SUPPLIER_REVIEW completion reference reviewed by the responsible role.",
+        "frequency_months": 24,
+        "id": "09226bb3-b973-5596-a75f-ba359a3872a5",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "02904f7f-18f9-5447-a9f7-1839fca39fd3"
+      },
+      {
+        "control_definition_id": "89fed116-38ca-517d-b3fb-37de2b69d272",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic PCR completion reference reviewed by the responsible role.",
+        "frequency_months": 24,
+        "id": "aa673caf-d5a2-5a6b-a99e-c893efa268b5",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "8060c044-c7e2-5ee1-a750-028518ede966"
+      },
+      {
+        "control_definition_id": "42bdeb0e-610b-5f59-84b9-cc73b5a7034f",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "due_soon_days": 30,
+        "evidence_requirement": "Synthetic ACCESS_REVIEW completion reference reviewed by the responsible role.",
+        "frequency_months": 6,
+        "id": "01e20e05-0a9f-51c5-a3f5-144e959bb801",
+        "mandatory": true,
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_version_id": "8060c044-c7e2-5ee1-a750-028518ede966"
+      }
+    ],
+    "policy_version": [
+      {
+        "change_reason": "SYNTHETIC DEMO DATA \u2014 initial illustrative organization profile.",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "criticality": "High",
+        "effective_from": "2025-01-01",
+        "effective_to": "2026-07-01",
+        "gxp_classification": "GxP",
+        "id": "2da706c2-d7d5-5c77-93fc-509f46d58f85",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_id": "0d64a64a-699a-5b68-9b0b-be2e96583bd8",
+        "version_number": 1
+      },
+      {
+        "change_reason": "SYNTHETIC DEMO DATA \u2014 fictional risk review shortens PCR from 24 to 12 calendar months; prior rules retained.",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "criticality": "High",
+        "effective_from": "2026-07-01",
+        "effective_to": null,
+        "gxp_classification": "GxP",
+        "id": "02904f7f-18f9-5447-a9f7-1839fca39fd3",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_id": "0d64a64a-699a-5b68-9b0b-be2e96583bd8",
+        "version_number": 2
+      },
+      {
+        "change_reason": "SYNTHETIC DEMO DATA \u2014 initial illustrative organization profile.",
+        "created_at": "2026-10-12 00:00:00+00:00",
+        "criticality": "Medium",
+        "effective_from": "2025-01-01",
+        "effective_to": null,
+        "gxp_classification": "GxP",
+        "id": "8060c044-c7e2-5ee1-a750-028518ede966",
+        "organization_id": "becdd76c-490f-52a1-9247-9f6a6845d774",
+        "policy_id": "4e54df59-1f43-5ec3-a8f9-14ba38a49152",
+        "version_number": 1
+      }
+    ]
+  },
+  "timestamp_meaning": "Invented fixture initialization time; not historical approval evidence."
+}
