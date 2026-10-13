@@ -1,7 +1,8 @@
 import { NavLink, Outlet } from 'react-router';
-import { SessionControl } from '../features/auth/Auth';
+import { SessionControl, useIdentity } from '../features/auth/Auth';
 
 export function AppLayout() {
+  const { identity } = useIdentity();
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -11,6 +12,7 @@ export function AppLayout() {
         </NavLink>
         <nav className="primary-nav" aria-label="Main navigation">
           <NavLink to="/applications">Application registry</NavLink>
+          {identity?.role === 'Admin' || identity?.role === 'Quality' ? <NavLink to="/policies">Governance policies</NavLink> : null}
           <NavLink to="/foundation">Foundation status</NavLink>
         </nav>
         <SessionControl />

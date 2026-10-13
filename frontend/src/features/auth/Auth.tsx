@@ -39,7 +39,7 @@ export function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const requested = (location.state as { returnTo?: unknown } | null)?.returnTo;
-  const returnTo = typeof requested === 'string' && /^\/applications(?:[/?]|$)/.test(requested) ? requested : '/applications';
+  const returnTo = typeof requested === 'string' && /^\/(?:applications|policies)(?:[/?]|$)/.test(requested) ? requested : '/applications';
   if (identity) return <Navigate to={returnTo} replace />;
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError('');

@@ -1,3 +1,4 @@
+import { ApplicablePolicy } from '../policies/PolicyViews';
 import { useIdentity } from '../auth/Auth';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router';
@@ -36,6 +37,7 @@ export function ApplicationDetail() {
             <div><h2>Validation</h2><p>{item.validation_state}</p><span>Recorded validation state</span></div>
             <div><h2>Governance</h2><p className="muted">Not available yet</p><span>Requires policies and concrete obligations</span></div>
           </section>
+          <ApplicablePolicy key={item.id} applicationId={item.id} />
           <div className="detail-grid">
             <section className="detail-card"><h2>System overview</h2><p className="description">{item.description ?? 'No description recorded.'}</p>
               <dl className="detail-fields"><div><dt>CI ID</dt><dd>{item.ci_id}</dd></div><div><dt>System type</dt><dd>{item.system_type}</dd></div>

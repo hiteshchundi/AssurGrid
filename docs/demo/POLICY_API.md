@@ -1,6 +1,6 @@
 # Policy reads and date resolution — Slice 07c
 
-These read-only endpoints require the existing browser session. Organization scope and role come from current backend membership, never client query parameters. Successful responses use `Cache-Control: no-store`. The UI has no policy page yet.
+These read-only endpoints require the existing browser session. Organization scope and role come from current backend membership, never client query parameters. Successful responses use `Cache-Control: no-store`. The read-only browser catalog/history and application policy section are available in Slice 07d.
 
 ## Organization policy catalog and history
 
@@ -34,4 +34,4 @@ The result is policy defaults, not governance health, concrete deadlines, accept
 
 Missing/invalid/expired authentication returns 401. Catalog/history role denial returns 403. Malformed path UUIDs return 422. Database errors return a safe 503 without SQL or credentials. POST/PATCH/DELETE policy writes are not exposed (405); audited publication and immutable history enforcement remain future work. Reads create no business audit events or outbox records.
 
-Manual inspection requires migrations, explicit registry/accounts/policy seeds, and an authenticated session. The automated integration tests run the real login flow and these endpoints against a disposable database. Browser policy presentation is a separate slice.
+Manual inspection requires migrations, explicit registry/accounts/policy seeds, and an authenticated session. The automated integration tests run the real login flow and these endpoints against a disposable database. Browser policy presentation is documented in [Slice 07d verification](SLICE_07D_VERIFICATION.md).

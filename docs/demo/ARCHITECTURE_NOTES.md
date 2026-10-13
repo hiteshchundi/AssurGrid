@@ -99,3 +99,9 @@ The policies module separates typed response/query contracts, HTTP role checks, 
 Resolution requires an explicit organization-local calendar date. One statement scopes the application and joins applicable versions/rules; it reports missing/conflicting configuration rather than choosing an arbitrary profile or claiming Current. Applicability uses currently recorded classification/criticality; historical application attribute reconstruction and application overrides are not implemented. Missing rules or inactive referenced controls suppress resolved rules. History remains independently inspectable and includes inactive controls.
 
 No migration, data write, mutation service, frontend change, or audit/publication claim is introduced. See [API contract](POLICY_API.md) and [Slice 07c verification](SLICE_07C_VERIFICATION.md).
+
+## Slice 07d — Read-only policy inspection UI
+
+Admin/Quality navigation exposes a paginated policy catalog and dated version/rule history. Authorized application details include a date form and applicable-default result. The date starts from the browser's local calendar day as editable input; explicit submitted dates and organization timezone are displayed from the response. Missing/conflicting configuration suppresses rule tables and never becomes a health badge. Historical application attributes and overrides remain out of scope.
+
+TanStack Query keys include actor ID/role, resource ID, and date/page. Fetches use session credentials, no-store, runtime response guards, and session-expiry handling. Errors suppress stale policy data. Client role checks guide navigation; API permissions remain authoritative. Login now restores policy routes as well as application routes. Semantic rule tables scroll inside their container on narrow screens. No backend/schema/data/dependency changes. See [verification](SLICE_07D_VERIFICATION.md).

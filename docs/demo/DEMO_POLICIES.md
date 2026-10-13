@@ -29,3 +29,9 @@ python backend/scripts/seed_policies.py --apply --confirm-demo
 The command requires an explicit process `DATABASE_URL`; it never loads `.env` implicitly. It checks the connected database name and the expected fictional organization. It compares all existing policy/control/rule rows before inserting missing exact fixtures, in one locked transaction. First run inserts 4 controls, 2 policies, 3 versions, and 10 rules; a repeat inserts zero. Edited or extra policy records cause refusal. It never updates or deletes records and is not a policy-editing utility.
 
 Account credentials are neither needed nor read by this seed. No UI or API permission claim is made for this operator command. Authenticated policy history and application/date resolution are now available through the [policy API](POLICY_API.md). Publication/audit enforcement, overrides, obligations, and health calculations remain later work. The browser registry continues to show governance as unavailable.
+
+## Inspect in the browser
+
+After seeding and starting the API/frontend, sign in as Admin or Quality and open **Governance policies**. Open High-Criticality GxP to inspect both versions and their own review rules. From the registry, open LIMS and use **Applicable policy → Policy date → Inspect date**. Compare 2026-06-30 (PCR 24 months) and 2026-07-01 (PCR 12 months). A date before 2025-01-01 reports missing configuration. Owner/Viewer can inspect defaults on assigned application details; the administration catalog is restricted.
+
+The date input initially uses the browser's calendar day as an editable suggestion. The result displays the submitted date and organization timezone; the API interprets that explicit date in the organization calendar. No due-date or health calculation happens in the browser. The chosen inspection date is local component state and resets on reload/application change.

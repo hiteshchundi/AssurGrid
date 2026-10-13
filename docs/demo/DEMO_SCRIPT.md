@@ -3,7 +3,7 @@
 
 # Current AssurGrid demonstration
 
-## Available through Slice 07b
+## Available through Slice 07d
 
 1. Follow the root README to start PostgreSQL, apply migrations, and start FastAPI and Vite.
 2. Open `http://localhost:5173/foundation`. The foundation page should show API and Database **Connected**. The navigation also opens the application registry.
@@ -17,7 +17,7 @@
 10. Open `http://localhost:5173/applications`. Expect 48 matching applications across three default pages. Search `NSB-LIMS-001` and apply filters, open its name, then use **Back to application registry**. The CI filter remains in the URL. Clear filters, choose Non-GxP, and apply: seven records should appear.
 11. Inspect lifecycle, validation, and governance separately. Governance is explicitly unavailable until its domain logic exists; owners are not recorded. Seed timestamps are shown in the browser's timezone. All pages identify synthetic data.
 
-12. Follow [policy setup](DEMO_POLICIES.md) to preview/export or explicitly seed the fictional policy fixtures. Repeat the seed: expect zero new records. Inspect the exported High GxP PCR rules: 24 months before July 1, 2026, and 12 months from that date. The [policy API](POLICY_API.md) can read history and resolve an authorized application on a requested date; no policy page or automatic obligation calculation exists yet.
+12. Follow [policy setup](DEMO_POLICIES.md) to preview/export or explicitly seed the fictional policy fixtures. Repeat the seed: expect zero new records. Inspect the exported High GxP PCR rules: 24 months before July 1, 2026, and 12 months from that date. As Admin, open **Governance policies** and inspect both High GxP versions. On LIMS details use **Applicable policy** to compare 2026-06-30 and 2026-07-01. A Viewer can inspect assigned LIMS defaults but cannot open the policy administration catalog. The [policy API](POLICY_API.md) remains authoritative; automatic obligation calculation is still pending.
 
 The tests use disposable synthetic records and leave no data in the development database. Registry access requires current session membership and role/application scope. Login/logout and account switching work; policy calculation and QA workflow remain pending.
 
