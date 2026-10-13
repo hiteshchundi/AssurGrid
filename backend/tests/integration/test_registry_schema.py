@@ -49,7 +49,7 @@ def test_fresh_migration_and_repeat_upgrade_preserve_records(registry_connection
     assert row["created_at"].utcoffset() == timedelta(0)
     assert row["updated_at"] == row["created_at"]
     assert "governance_health" not in row and "status" not in row
-    assert connection.execute(sa.text("SELECT version_num FROM alembic_version")).scalar_one() == "0004_policy_schema"
+    assert connection.execute(sa.text("SELECT version_num FROM alembic_version")).scalar_one() == "0005_obligation_schema"
 
 
 def test_migration_matches_core_definitions(registry_connection):
@@ -64,7 +64,7 @@ def test_downgrade_and_upgrade_in_disposable_database(registry_connection):
     assert set(sa.inspect(registry_connection).get_table_names()) == {
         "alembic_version", "organization", "regulated_application",
         "user_account", "membership", "application_access", "browser_session",
-        "control_definition", "governance_policy", "policy_version", "policy_control_rule",
+        "control_definition", "governance_policy", "policy_version", "policy_control_rule", "governance_obligation",
     }
 
 

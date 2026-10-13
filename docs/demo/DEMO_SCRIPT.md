@@ -3,11 +3,11 @@
 
 # Current AssurGrid demonstration
 
-## Available through Slice 07d
+## Available through Slice 08a
 
 1. Follow the root README to start PostgreSQL, apply migrations, and start FastAPI and Vite.
 2. Open `http://localhost:5173/foundation`. The foundation page should show API and Database **Connected**. The navigation also opens the application registry.
-3. Run `alembic -c backend/alembic.ini current` from the repository root with the backend environment activated. Expect `0004_policy_schema (head)`.
+3. Run `alembic -c backend/alembic.ini current` from the repository root with the backend environment activated. Expect `0005_obligation_schema (head)`.
 4. Run `python backend/scripts/seed_demo.py --as-of 2026-10-12 --dry-run`. Expect a visible **SYNTHETIC DEMO DATA** label, explicit date/timezone, one fictional organization, and 48 applications.
 5. Inspect [applications.csv](../../mock-data/generated/applications.csv) and the [manifest](../../mock-data/generated/manifest.json). Identify `NSB-LIMS-001` as Operational / Validated and explain that its overdue PCR will be added in the obligation slice, not manufactured as a registry badge.
 6. Follow the [safe seed instructions](../../mock-data/README.md) to populate a separate local `assurgrid_demo` database. Run the same seed date twice: expect 48 inserted applications, then zero additional applications.
@@ -24,3 +24,5 @@ The tests use disposable synthetic records and leave no data in the development 
 ## Intended story for later slices
 
 Open a synthetic application that is Operational and Validated, then explain its Overdue governance health by drilling into the concrete PCR deadline, applied policy version, and evidence. Follow an implemented change through owner submission, separate QA review, closure, and visibly simulated outbound delivery. These steps are planned and must not be presented as working until their slices pass verification.
+
+Slice 08a adds empty scheduled-obligation storage only. No obligations are generated yet, and the UI still correctly shows governance as unavailable.
