@@ -91,3 +91,11 @@ Upgrade and downgrade preserve existing registry and identity tables. The migrat
 A separate explicit seed adds four controls and two fictional GxP profiles. High GxP has adjacent versions with PCR changing from 24 to 12 months on July 1, 2026; Medium GxP has a distinct PCR/access configuration. Ten rules retain their specific version IDs. Stable UUIDv5 identities and a frozen snapshot produce byte-identical JSON across days; synthetic labels and invented timestamp meaning remain visible.
 
 The seed requires the matching fictional organization. It locks the relevant tables, compares all existing policy rows before inserts, fills missing exact records, and refuses edited or extra records. The CLI requires the same explicitly confirmed local demo target guard as registry setup. No migration, implicit startup seed, account change, or policy mutation endpoint is added. These fixtures do not imply publication audit evidence or accepted completions. See [policy setup](DEMO_POLICIES.md) and [verification](SLICE_07B_VERIFICATION.md).
+
+## Slice 07c — Authorized policy reads and resolution
+
+The policies module separates typed response/query contracts, HTTP role checks, and SQLAlchemy Core reads. Admin/Quality get a bounded organization catalog and per-policy version/rule history. Any user can resolve policy defaults for an application they are authorized to read, using the same organization/assignment predicate as the registry. Policy administration is not exposed to owner/viewer roles.
+
+Resolution requires an explicit organization-local calendar date. One statement scopes the application and joins applicable versions/rules; it reports missing/conflicting configuration rather than choosing an arbitrary profile or claiming Current. Applicability uses currently recorded classification/criticality; historical application attribute reconstruction and application overrides are not implemented. Missing rules or inactive referenced controls suppress resolved rules. History remains independently inspectable and includes inactive controls.
+
+No migration, data write, mutation service, frontend change, or audit/publication claim is introduced. See [API contract](POLICY_API.md) and [Slice 07c verification](SLICE_07C_VERIFICATION.md).
