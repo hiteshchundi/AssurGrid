@@ -1,9 +1,9 @@
-# Free interview sandbox; never attach company data to this deployment.
+# Synthetic sandbox; never attach company data to this deployment.
 services:
   - type: web
     name: assurgrid-api
     runtime: python
-    branch: codex/interview-mvp-release
+    branch: main
     plan: free
     region: singapore
     buildCommand: pip install -e ./backend
