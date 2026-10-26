@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
+import { baseUrl, requestTimeout } from './config';
 
 export interface Application {
   id: string;
@@ -45,12 +45,11 @@ function isApplication(value: unknown): value is Application {
 }
 
 async function request(path: string, signal: AbortSignal): Promise<unknown> {
-  if (!baseUrl) throw new RegistryError('The API address is not configured. Set VITE_API_BASE_URL and restart the frontend.');
   let response: Response;
   try {
     response = await fetch(`${baseUrl}${path}`, {
       credentials: 'include', cache: 'no-store',
-      signal: AbortSignal.any([signal, AbortSignal.timeout(5000)]),
+      signal: AbortSignal.any([signal, AbortSignal.timeout(requestTimeout)]),
     });
   } catch (error) {
     if (signal.aborted) throw error;

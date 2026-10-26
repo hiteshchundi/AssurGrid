@@ -1,4 +1,4 @@
-"""Opt-in PostgreSQL 18 tests in a disposable, socket-only local cluster."""
+"""Opt-in supported PostgreSQL tests in a disposable, socket-only local cluster."""
 
 import os
 from pathlib import Path
@@ -27,8 +27,8 @@ def registry_engine():
     version = subprocess.run(
         [str(binaries / "postgres"), "--version"], check=True, capture_output=True, text=True,
     ).stdout
-    if "(PostgreSQL) 18." not in version:
-        pytest.fail("Integration tests require PostgreSQL 18 binaries")
+    if not any(f"(PostgreSQL) {major}." in version for major in (17, 18)):
+        pytest.fail("Integration tests require PostgreSQL 17 or 18 binaries")
 
     # A short, private socket path avoids OS path limits and any developer server.
     with TemporaryDirectory(prefix="ag-test-", dir="/tmp") as directory:

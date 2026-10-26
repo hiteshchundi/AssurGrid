@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 import hmac
 import secrets
 from typing import Annotated
+from typing import Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
@@ -91,6 +92,64 @@ class Login(BaseModel):
     password: str = Field(min_length=1, max_length=256, repr=False)
 
 
+def create_browser_session(session, request, response, settings, user_id):
+    token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
+    created = now()
+    old_token = request.cookies.get(COOKIE)
+    if old_token and len(old_token) <= 128:
+        session.execute(browser_session.update().where(
+            browser_session.c.token_hash == token_hash(old_token), browser_session.c.revoked_at.is_(None),
+        ).values(revoked_at=created))
+    session.execute(browser_session.delete().where(browser_session.c.expires_at < created))
+    session.execute(browser_session.insert().values(
+        organization_id=settings.demo_registry_organization_id, user_id=user_id,
+        token_hash=token_hash(token), csrf_token_hash=token_hash(csrf),
+        created_at=created, expires_at=created + timedelta(hours=8),
+    ))
+    session.commit()
+    response.set_cookie(COOKIE, token, max_age=28800, httponly=True,
+                        secure=settings.frontend_origin.scheme == "https", samesite="strict", path="/api/v1")
+    response.headers["Cache-Control"] = "no-store"
+    return {"csrf_token": csrf}
+
+
+class DemoLogin(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    persona: Literal["admin", "quality", "owner", "viewer"]
+
+
+@router.get("/options")
+def options(settings: Annotated[Settings, Depends(get_settings)], response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return {"public_demo_enabled": settings.public_demo_enabled}
+
+
+@router.post("/demo")
+def demo_login(body: DemoLogin, request: Request, response: Response,
+               settings: Annotated[Settings, Depends(get_settings)],
+               session: Annotated[Session, Depends(get_session)]):
+    # Explicit public sandbox. These are synthetic personas, never an identity provider.
+    if not settings.public_demo_enabled or settings.demo_registry_organization_id is None:
+        raise HTTPException(503, "Public demo is disabled.")
+    require_origin(request, settings)
+    try:
+        from app.db.schema import organization
+        user = session.execute(sa.select(user_account.c.id).join(membership,
+            membership.c.user_id == user_account.c.id).join(organization,
+            organization.c.id == membership.c.organization_id).where(
+                organization.c.id == settings.demo_registry_organization_id,
+                organization.c.slug == "northstar-biopharma-demo",
+                user_account.c.email == f"{body.persona}@northstar.example.test",
+                user_account.c.active.is_(True), membership.c.active.is_(True),
+        )).scalar_one_or_none()
+        if user is None:
+            raise HTTPException(503, "The demo is not initialized yet.")
+        return create_browser_session(session, request, response, settings, user)
+    except SQLAlchemyError:
+        session.rollback()
+        raise HTTPException(503, "The demo is temporarily unavailable.") from None
+
+
 @router.post("/login")
 def login(body: Login, request: Request, response: Response,
           settings: Annotated[Settings, Depends(get_settings)],
@@ -108,26 +167,10 @@ def login(body: Login, request: Request, response: Response,
         valid = verify_password(body.password, row["password_hash"] if row else DUMMY_PASSWORD_HASH)
         if row is None or not valid:
             raise HTTPException(401, "Invalid email or password.")
-        token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
-        created = now()
-        old_token = request.cookies.get(COOKIE)
-        if old_token and len(old_token) <= 128:
-            session.execute(browser_session.update().where(
-                browser_session.c.token_hash == token_hash(old_token), browser_session.c.revoked_at.is_(None),
-            ).values(revoked_at=created))
-        session.execute(browser_session.insert().values(
-            organization_id=settings.demo_registry_organization_id, user_id=row["id"],
-            token_hash=token_hash(token), csrf_token_hash=token_hash(csrf),
-            created_at=created, expires_at=created + timedelta(hours=8),
-        ))
-        session.commit()
+        return create_browser_session(session, request, response, settings, row["id"])
     except SQLAlchemyError:
         session.rollback()
         raise HTTPException(503, "Authentication is temporarily unavailable.") from None
-    response.set_cookie(COOKIE, token, max_age=28800, httponly=True,
-                        secure=settings.frontend_origin.scheme == "https", samesite="strict", path="/api/v1")
-    response.headers["Cache-Control"] = "no-store"
-    return {"csrf_token": csrf}
 
 
 @router.get("/me")

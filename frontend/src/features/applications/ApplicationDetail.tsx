@@ -3,6 +3,7 @@ import { useIdentity } from '../auth/Auth';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from 'react-router';
 import { getApplication, RegistryError } from '../../api/applications';
+import { ApplicationGovernance } from '../governance/Governance';
 
 function timestamp(value: string) {
   const date = new Date(value);
@@ -35,9 +36,10 @@ export function ApplicationDetail() {
           <section className="state-summary" aria-label="Independent application states">
             <div><h2>Lifecycle</h2><p>{item.lifecycle_state}</p><span>Where the system is in its lifecycle</span></div>
             <div><h2>Validation</h2><p>{item.validation_state}</p><span>Recorded validation state</span></div>
-            <div><h2>Governance</h2><p className="muted">Not available yet</p><span>Requires policies and concrete obligations</span></div>
+            <div><h2>Governance</h2><p><a href="#governance-reviews">Review schedules ↓</a></p><span>Calculated from concrete obligations below</span></div>
           </section>
           <ApplicablePolicy key={item.id} applicationId={item.id} />
+          <div id="governance-reviews"><ApplicationGovernance applicationId={item.id} /></div>
           <div className="detail-grid">
             <section className="detail-card"><h2>System overview</h2><p className="description">{item.description ?? 'No description recorded.'}</p>
               <dl className="detail-fields"><div><dt>CI ID</dt><dd>{item.ci_id}</dd></div><div><dt>System type</dt><dd>{item.system_type}</dd></div>

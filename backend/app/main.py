@@ -14,3 +14,11 @@ app.add_middleware(
     allow_headers=["Accept", "Content-Type", "X-CSRF-Token"],
 )
 app.include_router(api_router)
+
+
+@app.middleware("http")
+async def prevent_private_response_caching(request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response

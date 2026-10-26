@@ -1,5 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
-if (!baseUrl) throw new Error('Set VITE_API_BASE_URL in frontend/.env');
+import { baseUrl, requestTimeout } from './config';
 
 export type Readiness =
   | { status: 'ready'; database: 'connected' }
@@ -7,7 +6,7 @@ export type Readiness =
 
 export async function getLiveness(signal: AbortSignal): Promise<{ status: 'ok' }> {
   const response = await fetch(`${baseUrl}/api/v1/health/live`, {
-    signal: AbortSignal.any([signal, AbortSignal.timeout(5000)]),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(requestTimeout)]),
   });
   if (!response.ok || (await response.json()).status !== 'ok') {
     throw new Error('API unavailable');
@@ -17,7 +16,7 @@ export async function getLiveness(signal: AbortSignal): Promise<{ status: 'ok' }
 
 export async function getReadiness(signal: AbortSignal): Promise<Readiness> {
   const response = await fetch(`${baseUrl}/api/v1/health/ready`, {
-    signal: AbortSignal.any([signal, AbortSignal.timeout(5000)]),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(requestTimeout)]),
   });
   if (response.status !== 200 && response.status !== 503) {
     throw new Error('Readiness check unavailable');
