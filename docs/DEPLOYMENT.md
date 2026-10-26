@@ -4,7 +4,7 @@ Frontend: Vercel Hobby, project `assurgrid`, root `frontend`, Vite, Node 24, `pn
 
 Backend: free Render Python web service `assurgrid-api` in Singapore, repository root as working directory, `pip install -e ./backend`, then `sh backend/scripts/start_hosted.sh`. This script upgrades Alembic, idempotently initializes the explicitly enabled synthetic sandbox, and executes Uvicorn on `0.0.0.0:$PORT`. Free Render has no separate pre-deploy hook, so initialization happens before the API binds its port.
 
-The interview deployment uses the review branch `codex/interview-mvp`. Merge it into `main` after review, then update the Render branch/Blueprint to `main` for subsequent releases. Until then, the deployed MVP and original `main` are deliberately separate.
+The interview deployment uses the review branch `codex/interview-mvp-release`. Merge it into `main` after review, then update the Render branch/Blueprint to `main` for subsequent releases. Until then, the deployed MVP and original `main` are deliberately separate.
 
 Database: dedicated free Render PostgreSQL 18 `assurgrid-demo`, database `assurgrid_demo`, same region as the API, public connections blocked. No company database is used.
 
