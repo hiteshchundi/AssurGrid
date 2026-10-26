@@ -1,4 +1,4 @@
-# Codex Build Prompt — AssurGrid AG-03 Initial Foundation
+# AssurGrid AG-03 Initial Foundation Build Prompt
 
 You are implementing **AG-03 — Foundation Build** for AssurGrid.
 
@@ -505,7 +505,7 @@ Before considering the task complete, verify all of the following:
 
 ---
 
-## Final Output Required From Codex
+## Required Implementation Handoff
 
 After implementation, provide a concise implementation report containing:
 

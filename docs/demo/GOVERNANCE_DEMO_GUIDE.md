@@ -1,4 +1,4 @@
-# Interview walkthrough
+# Governance demo walkthrough
 
 Use only fictional records and evidence references. This is a shared synthetic sandbox.
 
@@ -35,8 +35,8 @@ uvicorn app.main:app --host localhost --port 8000
 
 Start `pnpm dev` from `frontend/`. An unset or empty `VITE_API_BASE_URL` uses Vite's `/api` proxy; the documented explicit localhost API URL also works. Disabling public demo restores the original local-password workflow; hosted initialization is deliberately an explicit command.
 
-## Before an interview
+## Before presenting
 
-Open the frontend and foundation page at least two minutes beforehand. Render's free API sleeps after inactivity and may take about a minute to wake. Complete one disposable review beforehand to check persistence, then use another open review during the interview. Other visitors can have already completed a shared fixture; completed evidence remains visible.
+Open the frontend and foundation page at least two minutes beforehand. Render's free API sleeps after inactivity and may take about a minute to wake. Complete one disposable review beforehand to check persistence, then use another open review during the walkthrough. Other visitors can have already completed a shared fixture; completed evidence remains visible.
 
 The free Render database created October 26, 2026 expires November 25, 2026. Recreate a fresh free sandbox and reseed before that date if needed. No recurring keep-alive, paid upgrade, real evidence upload, or company integration is configured.

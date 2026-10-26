@@ -2,9 +2,9 @@
 
 ## What the requested prompt actually covers
 
-`CODEX_AG-03_Initial_Build_Prompt.md` specifies the foundation only: React → FastAPI → SQLAlchemy → psycopg → PostgreSQL, health endpoints, migrations, configuration, tests, and local startup documentation. It explicitly excludes business functionality and cloud deployment. The owner's current request supersedes that old milestone boundary for the interview MVP.
+`AG-03_Initial_Build_Prompt.md` specifies the foundation only: React → FastAPI → SQLAlchemy → psycopg → PostgreSQL, health endpoints, migrations, configuration, tests, and local startup documentation. It explicitly excludes business functionality and cloud deployment. The current hosted governance demo extends beyond that original milestone boundary.
 
-The supplied local folder matched GitHub `main` at `ec1a351` before changes. It was an exported source folder without `.git`, rather than a working checkout. The README's referenced `AssurGrid_CODEX_PROTOTYPE_BUILD.md` is missing on GitHub and locally.
+The supplied local folder matched GitHub `main` at `ec1a351` before changes. It was an exported source folder without `.git`, rather than a working checkout. The README's referenced `AssurGrid_Prototype_Build.md` is missing on GitHub and locally.
 
 ## State on arrival
 
@@ -21,9 +21,9 @@ The supplied local folder matched GitHub `main` at `ec1a351` before changes. It 
 | Portfolio overview | Missing | Governance explicitly unavailable in the registry and application details |
 | Hosting | Missing | No Render/Vercel configuration; production password login disabled; cross-site cookie design unsuitable for direct Vercel-to-Render browser calls |
 
-AG-03's foundation functionality was already built. Calling the whole project “50% complete” would be misleading: AG-03 is a finished milestone, whereas the larger product has no approved comprehensive completion denominator. The interview gap was one demonstrable governance workflow and hosting.
+AG-03's foundation functionality was already built. Calling the whole project “50% complete” would be misleading: AG-03 is a finished milestone, whereas the larger product has no approved comprehensive completion denominator. The remaining gap was a demonstrable governance workflow and hosting.
 
-## Implemented interview MVP
+## Implemented governance demo
 
 - Public sandbox entry using four explicitly synthetic personas, with ordinary production password login still disabled.
 - Role-scoped overview and filterable overdue/due-soon/upcoming/completed reviews.
@@ -35,7 +35,7 @@ AG-03's foundation functionality was already built. Calling the whole project �
 - Vercel same-origin API forwarding to the Render backend and SPA deep-link fallback.
 - Render free service/database configuration, startup migrations, and readiness path.
 
-## What remains outside this MVP
+## What remains outside the current demo
 
 Policy publication/editing, policy-change-driven schedule recalculation and overrides, real initial schedule anchors, business/technical/quality owner management, separate QA acceptance, document upload/version lineage, controlled electronic signatures, full audit trail, changes/findings/validation execution, CSV ingestion/reconciliation, outbound integrations, notifications, and enterprise SSO remain future work.
 
@@ -45,6 +45,6 @@ Deadline fixtures are frozen, fictional examples relative to October 26, 2026. T
 
 ## Verification
 
-The baseline frontend production build passed; 38 isolated backend tests passed with 161 PostgreSQL tests initially skipped. After obtaining PostgreSQL 18 binaries with `btree_gist`, the complete MVP suite passed: **216 tests**, no skipped tests. TypeScript and Vite production build passed. Render YAML passed validation against the current public Render JSON schema. Browser and deployed verification are recorded in the walkthrough/deployment report when completed.
+The baseline frontend production build passed; 38 isolated backend tests passed with 161 PostgreSQL tests initially skipped. After obtaining PostgreSQL 18 binaries with `btree_gist`, the complete test suite passed: **216 tests**, no skipped tests. TypeScript and Vite production build passed. Render YAML passed validation against the current public Render JSON schema. Browser and deployed verification are recorded in the walkthrough/deployment report when completed.
 
 The Compose engine is not installed on this machine, so the current database verification uses a disposable native PostgreSQL 18 socket-only cluster. Existing historical Compose verification remains in `AG-03_Implementation_Report.md`; it was not silently rerun or claimed here.

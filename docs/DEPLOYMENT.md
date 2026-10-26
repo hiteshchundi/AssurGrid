@@ -1,10 +1,10 @@
-# Free interview hosting
+# Free synthetic sandbox hosting
 
 Frontend: Vercel Hobby, project `assurgrid`, root `frontend`, Vite, Node 24, `pnpm install --frozen-lockfile`, `pnpm build`, output `dist`. Do not set `VITE_API_BASE_URL` for the hosted build; its default is same-origin. `frontend/vercel.json` forwards `/api/*` to `https://assurgrid-api.onrender.com` and serves the SPA for frontend deep links. Keep API responses uncached.
 
 Backend: free Render Python web service `assurgrid-api` in Singapore, repository root as working directory, `pip install -e ./backend`, then `sh backend/scripts/start_hosted.sh`. This script upgrades Alembic, idempotently initializes the explicitly enabled synthetic sandbox, and executes Uvicorn on `0.0.0.0:$PORT`. Free Render has no separate pre-deploy hook, so initialization happens before the API binds its port.
 
-The interview deployment uses the review branch `codex/interview-mvp-release`. Merge it into `main` after review, then update the Render branch/Blueprint to `main` for subsequent releases. Until then, the deployed MVP and original `main` are deliberately separate.
+Both Vercel and Render deploy from `main`. Vercel builds the frontend from the `frontend` directory; Render builds the API and deploys on each commit to `main`.
 
 Database: dedicated free Render PostgreSQL 18 `assurgrid-demo`, database `assurgrid_demo`, same region as the API, public connections blocked. No company database is used.
 
@@ -21,7 +21,7 @@ Database: dedicated free Render PostgreSQL 18 `assurgrid-demo`, database `assurg
 
 Standard Render `postgresql://` URLs are normalized to SQLAlchemy's `postgresql+psycopg://` driver. The same configuration is used for migrations and runtime access. Ordinary password login stays disabled in production. Demo entry authorizes only the four predefined synthetic personas in the fictional Northstar organization.
 
-Configure Render's HTTP health check to `/api/v1/health/ready`. A deploy is successful only when it is **live** and the final frontend can enter the demo, load real database records, complete a review, reload evidence, and sign out. The Vercel project must allow public access to the intended interview URL rather than requiring your Vercel team login.
+Configure Render's HTTP health check to `/api/v1/health/ready`. A deploy is successful only when it is **live** and the final frontend can enter the demo, load real database records, complete a review, reload evidence, and sign out. The Vercel project must allow public access to the public demo URL rather than requiring your Vercel team login.
 
 ## Reproducible Blueprint option
 

@@ -1,19 +1,19 @@
-# AssurGrid — Codex Implementation Specification
+# AssurGrid — the implementation agent Implementation Specification
 
 **Status:** Active Build Contract  
 **Applies to:** AssurGrid V1 implementation  
 **Source of truth:** AG-00 Product Philosophy, AG-01 Product Design, AG-02 System Design & Architecture  
-**Purpose:** Tell Codex exactly how to build AssurGrid incrementally without inventing architecture, skipping learning steps, or introducing unnecessary complexity.
+**Purpose:** Tell the implementation agent exactly how to build AssurGrid incrementally without inventing architecture, skipping learning steps, or introducing unnecessary complexity.
 
 ---
 
-# 1. Codex Operating Principle
+# 1. the implementation agent Operating Principle
 
-Codex is an implementation assistant, not the product architect.
+the implementation agent is an implementation assistant, not the product architect.
 
 It must implement the decisions already made in the AssurGrid design documents.
 
-Codex must not silently redesign:
+the implementation agent must not silently redesign:
 
 - the architecture,
 - the technology stack,
@@ -24,7 +24,7 @@ Codex must not silently redesign:
 - the storage strategy,
 - or the project sequence.
 
-If an implementation question is not covered by the source-of-truth documents, Codex should choose the smallest reversible implementation that preserves the existing architecture and clearly flag the decision.
+If an implementation question is not covered by the source-of-truth documents, the implementation agent should choose the smallest reversible implementation that preserves the existing architecture and clearly flag the decision.
 
 ---
 
@@ -55,7 +55,7 @@ Every implementation step should be:
 
 # 3. Locked Technology Stack
 
-Codex must use:
+the implementation agent must use:
 
 ## Frontend
 
@@ -86,7 +86,7 @@ Do not replace these technologies unless the source-of-truth architecture is exp
 
 # 4. Prohibited Architecture Changes
 
-Codex must not introduce the following unless specifically instructed:
+the implementation agent must not introduce the following unless specifically instructed:
 
 - microservices,
 - Kubernetes,
@@ -258,7 +258,7 @@ Do not hide SQL behind a generic ORM.
 
 # 9. Database Rules
 
-Codex must treat PostgreSQL as an active integrity boundary.
+the implementation agent must treat PostgreSQL as an active integrity boundary.
 
 Use database features where appropriate:
 
@@ -323,7 +323,7 @@ Do not add a generic `status` field that collapses these concepts.
 
 # 12. Governance Model
 
-Codex must preserve this chain:
+the implementation agent must preserve this chain:
 
 ```text
 Control Definition
@@ -664,7 +664,7 @@ Do not scatter unversioned routes across the application.
 
 # 30. AG-03 Implementation Order
 
-Codex should implement AG-03 in small vertical steps.
+the implementation agent should implement AG-03 in small vertical steps.
 
 ## Step 1 — Repository Foundation
 
@@ -784,7 +784,7 @@ This should become the first real end-to-end domain path.
 
 # 31. Do Not Skip Ahead
 
-During AG-03, Codex must not implement in advance:
+During AG-03, the implementation agent must not implement in advance:
 
 - full governance engine,
 - full RBAC,
@@ -803,7 +803,7 @@ Only create boundaries required to avoid obvious rework.
 
 # 32. Incremental Delivery Contract
 
-For each implementation step, Codex should return:
+For each implementation step, the implementation agent should return:
 
 1. what changed,
 2. why it changed,
@@ -823,7 +823,7 @@ Do not dump unexplained code.
 
 The project owner is learning the system deeply.
 
-Therefore Codex should prefer:
+Therefore the implementation agent should prefer:
 
 - clear naming,
 - explicit logic,
@@ -835,13 +835,13 @@ Avoid clever code.
 
 Avoid abstractions that make the implementation harder to explain.
 
-Every important implementation should be defensible in an interview.
+Every important implementation should be defensible during technical review.
 
 ---
 
 # 34. Change Discipline
 
-If Codex believes an architectural change is necessary:
+If the implementation agent believes an architectural change is necessary:
 
 1. do not silently implement it,
 2. explain the conflict,
@@ -872,7 +872,7 @@ If not, the milestone is not complete.
 
 # 36. V1 Architectural North Star
 
-Codex must continually preserve this mental model:
+the implementation agent must continually preserve this mental model:
 
 ```text
 PostgreSQL protects truth

@@ -75,7 +75,7 @@ export function LoginPage() {
   if (demo.data) return <section className="demo-entry"><div className="demo-intro"><p className="eyebrow">GOVERNANCE, WITH CONTEXT</p>
     <h1>Know what’s due.<br />Show where the evidence is.</h1><p>A workspace for oversight of regulated applications. Explore a fictional portfolio, inspect policy-driven review schedules, and record completion evidence.</p>
     <div className="demo-story"><span>01 · Portfolio</span><span>02 · Application</span><span>03 · Review</span><span>04 · Evidence</span></div>
-    <p className="context-note">An interview portfolio prototype. Synthetic data and illustrative policies; no regulatory certification or electronic signature claim.</p></div>
+    <p className="context-note">A synthetic governance demo. Synthetic data and illustrative policies; no regulatory certification or electronic signature claim.</p></div>
     <div className="persona-panel detail-card"><p className="eyebrow">NORTHSTAR BIOPHARMA · FICTIONAL</p><h2>Choose a demo perspective</h2><p>No account setup needed. Switch roles by signing out.</p>
       <div className="persona-grid">{[
         ['quality', 'Quality', 'Inspect all 48 applications and record review evidence.'],

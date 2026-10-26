@@ -885,7 +885,7 @@ Calculate Metrics
 Dashboard
 ```
 
-This makes the portfolio project more realistic and more defensible in technical interviews.
+This makes the portfolio project more realistic and more defensible during technical review.
 
 ---
 

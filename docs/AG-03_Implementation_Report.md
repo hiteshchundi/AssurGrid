@@ -4,7 +4,7 @@ Date: 8 October 2026.
 
 ## Scope and source precedence
 
-Implemented the foundation described by `CODEX_AG-03_Initial_Build_Prompt.md`, `prod-docs/AG-03_Foundation_Build.md`, and `prod-docs/AG-03_Decisions.md`. These milestone-specific documents supersede the older specification where it asks for a registry slice, different health routes, direct psycopg-only access, or placeholder directories.
+Implemented the foundation described by `AG-03_Initial_Build_Prompt.md`, `prod-docs/AG-03_Foundation_Build.md`, and `prod-docs/AG-03_Decisions.md`. These milestone-specific documents supersede the older specification where it asks for a registry slice, different health routes, direct psycopg-only access, or placeholder directories.
 
 The owner explicitly requested replacing every folder in the existing GitHub repository and starting anew. The prior DBE curriculum, schema, seed, and placeholder folders are removed. On the owner's subsequent explicit request, the published `main` branch starts from a single fresh root commit containing AG-03; its reachable history does not include the prior commits. All seven supplied local Markdown source documents remain unchanged.
 
