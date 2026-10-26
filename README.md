@@ -8,11 +8,11 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Interview MVP: role-scoped portfolio → application → review → evidence.** The browser supports four synthetic perspectives (Admin, Quality, Application Owner, Viewer), a searchable 48-application registry, effective-dated governance policies, a live due/overdue overview, and evidence-backed review completion. Saving completion retains the old deadline and policy snapshot, records the actor/time/reference/notes, and creates the next calendar-month review in the same transaction.
+**Governance demo: role-scoped portfolio → application → review → evidence.** The browser supports four synthetic perspectives (Admin, Quality, Application Owner, Viewer), a searchable 48-application registry, effective-dated governance policies, a live due/overdue overview, and evidence-backed review completion. Saving completion retains the old deadline and policy snapshot, records the actor/time/reference/notes, and creates the next calendar-month review in the same transaction.
 
 Public persona entry requires `PUBLIC_DEMO_ENABLED=true` and the dedicated fictional Northstar organization. It grants access to a shared synthetic sandbox only; ordinary production password login stays disabled. Viewer is read-only; Owner sees three assigned systems; Quality/Admin see all 48. Existing local password login remains available with the original setup below.
 
-Read [the build assessment](docs/MVP_ASSESSMENT.md), [the MVP walkthrough](docs/demo/MVP_WALKTHROUGH.md), and [deployment instructions](docs/DEPLOYMENT.md). Broader change/QA workflows, document version management, policy editing/recalculation, enterprise SSO, and integrations remain future work.
+Read [the build assessment](docs/PROJECT_ASSESSMENT.md), [the demo guide](docs/demo/GOVERNANCE_DEMO_GUIDE.md), and [deployment instructions](docs/DEPLOYMENT.md). Broader change/QA workflows, document version management, policy editing/recalculation, enterprise SSO, and integrations remain future work.
 
 ## Prototype scope and data
 
@@ -24,9 +24,9 @@ This is not production-validated software and makes no regulatory certification 
 
 ## Build instructions and source of truth
 
-The owner's October 26, 2026 request authorizes an interview MVP and free Vercel/Render deployment beyond the original foundation milestone. The README previously referenced `AssurGrid_CODEX_PROTOTYPE_BUILD.md`; that file is absent from both the supplied folder and GitHub `main`. Preserved milestone and product documents remain the historical source of truth.
+The original foundation and current governance demo are documented separately. The milestone and product documents remain the source of truth for architecture and scope.
 
-The existing foundation follows [AG-03 decisions](prod-docs/AG-03_Decisions.md), the [foundation build](prod-docs/AG-03_Foundation_Build.md), and the [initial build prompt](CODEX_AG-03_Initial_Build_Prompt.md). Preserve those implemented constraints and the locked [product philosophy](prod-docs/AG-00-product-philosophy.md), [product design](prod-docs/AG-01_Product_Design.md), and [architecture](prod-docs/AG-02_System_Architecture.md). The [older implementation specification](AssurGrid_Codex_Implementation_Spec.md) supplies non-conflicting engineering guidance. See the [AG-03 implementation report](docs/AG-03_Implementation_Report.md) for previous verification evidence.
+The existing foundation follows [AG-03 decisions](prod-docs/AG-03_Decisions.md), the [foundation build](prod-docs/AG-03_Foundation_Build.md), and the [initial build prompt](AG-03_Initial_Build_Prompt.md). Preserve those implemented constraints and the locked [product philosophy](prod-docs/AG-00-product-philosophy.md), [product design](prod-docs/AG-01_Product_Design.md), and [architecture](prod-docs/AG-02_System_Architecture.md). The [older implementation specification](AssurGrid_Implementation_Spec.md) supplies non-conflicting engineering guidance. See the [AG-03 implementation report](docs/AG-03_Implementation_Report.md) for previous verification evidence.
 
 ## Prerequisites
 
@@ -240,4 +240,4 @@ Browser → React → FastAPI → SQLAlchemy → psycopg → PostgreSQL
 - `docs/AG-03_Implementation_Report.md`: implementation and verification evidence
 - `mock-data/`: synthetic registry snapshots, source manifest, and safe seed instructions
 
-The interview MVP adds governance overview and review completion to the existing domain slices. This is a synthetic portfolio demonstration, not a validated regulated production system.
+The governance demo adds a portfolio overview and review completion to the existing domain slices. This is a synthetic portfolio demonstration, not a validated regulated production system.
