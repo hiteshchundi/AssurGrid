@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
+import { baseUrl, requestTimeout } from './config';
 export interface Rule { id: string; control_definition_id: string; control_key: string; control_name: string; control_active: boolean; frequency_months: number; due_soon_days: number; mandatory: boolean; evidence_requirement: string | null }
 export interface Policy { id: string; policy_key: string; name: string }
 export interface Version { id: string; version_number: number; effective_from: string; effective_to: string | null; gxp_classification: string; criticality: string; change_reason: string; rules: Rule[] }
@@ -16,9 +16,8 @@ function isRule(v: unknown): v is Rule { return record(v) && strings(v, ['id', '
 function isVersion(v: unknown): v is Version { return record(v) && strings(v, ['id', 'effective_from', 'gxp_classification', 'criticality', 'change_reason']) && nullableString(v.effective_to) && integer(v.version_number) && Array.isArray(v.rules) && v.rules.every(isRule); }
 function isCandidate(v: unknown): v is Candidate { return record(v) && strings(v, ['policy_id','policy_key','policy_name','policy_version_id','effective_from']) && integer(v.version_number) && nullableString(v.effective_to); }
 async function request(path: string, signal: AbortSignal): Promise<unknown> {
-  if (!baseUrl) throw new PolicyError('The API address is not configured.');
   let response: Response;
-  try { response = await fetch(`${baseUrl}/api/v1${path}`, { credentials: 'include', cache: 'no-store', signal: AbortSignal.any([signal, AbortSignal.timeout(5000)]) }); }
+  try { response = await fetch(`${baseUrl}/api/v1${path}`, { credentials: 'include', cache: 'no-store', signal: AbortSignal.any([signal, AbortSignal.timeout(requestTimeout)]) }); }
   catch (error) { if (signal.aborted) throw error; throw new PolicyError('Policy data could not be reached. Please try again.'); }
   if (!response.ok) {
     if (response.status === 401) window.dispatchEvent(new Event('assurgrid-session-expired'));

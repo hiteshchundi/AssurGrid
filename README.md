@@ -8,9 +8,11 @@ Lifecycle state, validation state, and ongoing governance health answer differen
 
 ## Current implementation
 
-**Working prototype: sign-in, role-scoped registry list/details, and foundation status.** The API checks current session, organization membership, and application access on every read. Admin/Quality see the fictional portfolio; Owner/Viewer see their assigned applications. Login/logout and session reload are integrated into the browser.
+**Interview MVP: role-scoped portfolio → application → review → evidence.** The browser supports four synthetic perspectives (Admin, Quality, Application Owner, Viewer), a searchable 48-application registry, effective-dated governance policies, a live due/overdue overview, and evidence-backed review completion. Saving completion retains the old deadline and policy snapshot, records the actor/time/reference/notes, and creates the next calendar-month review in the same transaction.
 
-Registry seeding and four-category demo account setup are explicit local commands. No passwords are checked in or assigned automatically. Policy storage and an explicit reproducible policy seed are available. Admin/Quality can inspect policy profiles and version history in the browser, and authorized application details show policy defaults for a chosen date. Authenticated policy history and application/date resolution APIs are available; scheduled-obligation storage is defined, while policy editing, obligation generation/completion, governance dashboard, and change/QA workflow remain planned. See the [policy API contract](docs/demo/POLICY_API.md). Governance is unavailable and business/technical/quality ownership is not recorded. See [demo account setup](docs/demo/DEMO_ACCOUNTS.md) and [Slice 06c verification](docs/demo/SLICE_06C_VERIFICATION.md).
+Public persona entry requires `PUBLIC_DEMO_ENABLED=true` and the dedicated fictional Northstar organization. It grants access to a shared synthetic sandbox only; ordinary production password login stays disabled. Viewer is read-only; Owner sees three assigned systems; Quality/Admin see all 48. Existing local password login remains available with the original setup below.
+
+Read [the build assessment](docs/MVP_ASSESSMENT.md), [the MVP walkthrough](docs/demo/MVP_WALKTHROUGH.md), and [deployment instructions](docs/DEPLOYMENT.md). Broader change/QA workflows, document version management, policy editing/recalculation, enterprise SSO, and integrations remain future work.
 
 ## Prototype scope and data
 
@@ -22,7 +24,7 @@ This is not production-validated software and makes no regulatory certification 
 
 ## Build instructions and source of truth
 
-The [prototype build contract](AssurGrid_CODEX_PROTOTYPE_BUILD.md) governs the incremental build order and approval gates alongside the owner's latest explicit instructions. Each small slice is implemented, checked, and reviewed before explicit approval to commit; pushing requires separate approval.
+The owner's October 26, 2026 request authorizes an interview MVP and free Vercel/Render deployment beyond the original foundation milestone. The README previously referenced `AssurGrid_CODEX_PROTOTYPE_BUILD.md`; that file is absent from both the supplied folder and GitHub `main`. Preserved milestone and product documents remain the historical source of truth.
 
 The existing foundation follows [AG-03 decisions](prod-docs/AG-03_Decisions.md), the [foundation build](prod-docs/AG-03_Foundation_Build.md), and the [initial build prompt](CODEX_AG-03_Initial_Build_Prompt.md). Preserve those implemented constraints and the locked [product philosophy](prod-docs/AG-00-product-philosophy.md), [product design](prod-docs/AG-01_Product_Design.md), and [architecture](prod-docs/AG-02_System_Architecture.md). The [older implementation specification](AssurGrid_Codex_Implementation_Spec.md) supplies non-conflicting engineering guidance. See the [AG-03 implementation report](docs/AG-03_Implementation_Report.md) for previous verification evidence.
 
@@ -52,7 +54,7 @@ cp frontend/.env.example frontend/.env
 
 These files are ignored by Git. The example credentials are disposable local development values. Keep `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT`, and `DATABASE_URL` consistent. If a password contains special URL characters, percent-encode it in `DATABASE_URL` only.
 
-`DATABASE_URL` must use `postgresql+psycopg://`. Its example sets a three-second driver connection timeout without changing SQLAlchemy pool defaults. `FRONTEND_ORIGIN` is the browser origin, without a path. `VITE_API_BASE_URL` is the backend origin; restart Vite when changing it.
+`DATABASE_URL` uses `postgresql+psycopg://`; standard `postgresql://` URLs supplied by Render are normalized to the same driver. Its example sets a three-second driver connection timeout without changing SQLAlchemy pool defaults. `FRONTEND_ORIGIN` is the browser origin, without a path. `VITE_API_BASE_URL` is the backend origin; restart Vite when changing it.
 
 The backend loads the root `.env` using a path relative to its settings module, independent of your working directory. Missing required settings fail validation at startup.
 
@@ -84,11 +86,11 @@ alembic -c backend/alembic.ini upgrade head
 alembic -c backend/alembic.ini current
 ```
 
-The expected revision is `0005_obligation_schema`. The original empty `0001_foundation` baseline is preserved. Migration `0002_application_registry` adds organization and application tables; `0003_identity` adds accounts, memberships, application access, and session storage without seed rows. Migration `0004_policy_schema` adds control definitions, policies, effective versions, and control rules, using PostgreSQL’s `btree_gist` extension to reject overlapping version periods. The migration role must be able to install that extension if absent. Migrations insert no policy rows; the separate [policy seed command](docs/demo/DEMO_POLICIES.md) creates the fictional fixtures. Migration `0005_obligation_schema` adds empty policy-linked scheduled obligations and a composite rule reference constraint. Alembic and FastAPI use the same environment settings. Upgrading preserves existing registry, account, and policy data. Downgrading 0005 removes obligations only and the added rule constraint. Downgrading 0004 removes policy tables only and retains the potentially shared extension. Downgrading 0003 removes identity data but preserves the registry; downgrading 0002 removes registry data too. Use downgrade only in a disposable database.
+The expected revision is `0006_obligation_completion`. Migration 0006 adds completion evidence and same-organization references without changing existing schedules. The original empty `0001_foundation` baseline is preserved. Migration `0002_application_registry` adds organization and application tables; `0003_identity` adds accounts, memberships, application access, and session storage without seed rows. Migration `0004_policy_schema` adds control definitions, policies, effective versions, and control rules, using PostgreSQL’s `btree_gist` extension to reject overlapping version periods. The migration role must be able to install that extension if absent. Migrations insert no policy rows; the separate [policy seed command](docs/demo/DEMO_POLICIES.md) creates the fictional fixtures. Migration `0005_obligation_schema` adds empty policy-linked scheduled obligations and a composite rule reference constraint. Alembic and FastAPI use the same environment settings. Upgrading preserves existing registry, account, and policy data. Downgrading 0005 removes obligations only and the added rule constraint. Downgrading 0004 removes policy tables only and retains the potentially shared extension. Downgrading 0003 removes identity data but preserves the registry; downgrading 0002 removes registry data too. Use downgrade only in a disposable database.
 
 ## 5. Start FastAPI
 
-For the optional 48-application dataset, follow the [demo-data instructions](mock-data/README.md) to create and seed a separate `assurgrid_demo` database. Preview without a database using `python backend/scripts/seed_demo.py --as-of 2026-10-12 --dry-run`. No seed runs automatically during migration or API startup.
+For the optional 48-application dataset, follow the [demo-data instructions](mock-data/README.md) to create and seed a separate `assurgrid_demo` database. Preview without a database using `python backend/scripts/seed_demo.py --as-of 2026-10-12 --dry-run`. Normal local migration/API startup does not seed data. The explicit hosted-sandbox startup script applies migrations and idempotent synthetic fixtures; it preserves existing completion records.
 
 With the virtual environment activated, in a terminal at the repository root:
 
@@ -126,7 +128,7 @@ source backend/.venv/bin/activate
 python -m pytest backend/tests
 ```
 
-The four health tests isolate the database dependency. They verify liveness without database access, successful readiness, safe failure while liveness remains healthy, and configured-origin CORS. They do not need a running PostgreSQL server. Registry integration tests are skipped unless you explicitly provide PostgreSQL 18 binaries:
+The four health tests isolate the database dependency. They verify liveness without database access, successful readiness, safe failure while liveness remains healthy, and configured-origin CORS. They do not need a running PostgreSQL server. Database integration tests are skipped unless you explicitly provide PostgreSQL 17 or 18 binaries (18 is used for the current verification):
 
 ```sh
 # macOS/Homebrew example; use your installed PostgreSQL 18 bin directory.
@@ -151,15 +153,16 @@ From `frontend/`:
 pnpm dev
 ```
 
-Vite uses port 5173 with `strictPort` so it cannot silently switch away from the configured CORS origin. React Router redirects `/` to `/applications`, serves details at `/applications/:id`, and keeps health checks at `/foundation`. Registry filters and page numbers live in the URL and are preserved when returning from details. Without the optional API scope/seed setup, the registry shows an unavailable or empty state.
+Vite uses port 5173 with `strictPort` so it cannot silently switch away from the configured CORS origin. React Router redirects `/` to `/overview`, serves details at `/applications/:id`, and keeps health checks at `/foundation`. Registry filters and page numbers live in the URL and are preserved when returning from details. Without the optional API scope/seed setup, the registry shows an unavailable or empty state.
 
-On `/foundation`, TanStack Query fetches liveness and readiness independently. Checks run on load, every ten seconds while the page is active, on window focus, and when clicking **Check again**. A five-second browser timeout bounds each check. Registry reads also time out after five seconds, refresh on request/focus as needed, and hide cached rows after a failed refresh.
+On `/foundation`, TanStack Query fetches liveness and readiness independently. Checks run on load, every ten seconds while the page is active, on window focus, and when clicking **Check again**. A 75-second browser timeout allows the free hosted API to wake from idle. Registry reads use the same timeout, refresh on request/focus as needed, and hide cached rows after a failed refresh.
 
 The page distinguishes **Connected**, **Unavailable**, **Checking**, and **Unknown**. If the backend cannot be reached, database status is unknown rather than claiming a database diagnosis. A failed refetch takes precedence over cached healthy data.
 
 ## 9. Open the application
 
 - Frontend: <http://localhost:5173>
+- Overview: <http://localhost:5173/overview>
 - Registry: <http://localhost:5173/applications>
 - Foundation status: <http://localhost:5173/foundation>
 - API documentation: <http://localhost:8000/docs>
@@ -237,4 +240,4 @@ Browser → React → FastAPI → SQLAlchemy → psycopg → PostgreSQL
 - `docs/AG-03_Implementation_Report.md`: implementation and verification evidence
 - `mock-data/`: synthetic registry snapshots, source manifest, and safe seed instructions
 
-AG-04 and user-facing business workflows are not implemented. The registry schema, synthetic seed, and read-only API are the first domain slices.
+The interview MVP adds governance overview and review completion to the existing domain slices. This is a synthetic portfolio demonstration, not a validated regulated production system.

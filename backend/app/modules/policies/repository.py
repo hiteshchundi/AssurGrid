@@ -82,6 +82,6 @@ def resolve(session, principal, application_id, as_of):
     elif not rules or any(not item["control_active"] for item in rules):
         configuration, explanation = "Missing Configuration", "The matching version has no rules or references inactive controls."
     else:
-        configuration, explanation = "Resolved", "One policy version matches. Rules are organization defaults; overrides and obligations are not implemented."
+        configuration, explanation = "Resolved", "One policy version matches. These are organization defaults for the selected date. Stored review schedules retain their own policy snapshots; application overrides are not implemented."
     return dict(application_id=application_id, as_of=as_of, timezone=rows[0]["timezone"], configuration=configuration,
                 explanation=explanation, candidates=list(candidates.values()), rules=rules if configuration == "Resolved" else [])

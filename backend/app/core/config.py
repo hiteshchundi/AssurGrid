@@ -19,10 +19,14 @@ class Settings(BaseSettings):
     frontend_origin: HttpUrl
     app_env: Literal["development", "test", "production"] = "development"
     demo_registry_organization_id: UUID | None = None
+    public_demo_enabled: bool = False
 
     @field_validator("database_url")
     @classmethod
     def require_psycopg(cls, value: str) -> str:
+        # Render provides standard PostgreSQL URLs; always select psycopg explicitly.
+        if value.startswith("postgresql://"):
+            value = value.replace("postgresql://", "postgresql+psycopg://", 1)
         if make_url(value).drivername != "postgresql+psycopg":
             raise ValueError("DATABASE_URL must use postgresql+psycopg")
         return value

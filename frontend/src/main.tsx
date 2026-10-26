@@ -10,6 +10,7 @@ import { ApplicationDetail } from './features/applications/ApplicationDetail';
 import { AuthProvider, LoginPage, RequireLogin } from './features/auth/Auth';
 import { PolicyCatalog, PolicyHistory } from './features/policies/PolicyViews';
 import './styles/global.css';
+import { GovernanceOverview } from './features/governance/Governance';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchInterval: 10000 } },
@@ -22,9 +23,10 @@ createRoot(document.getElementById('root')!).render(
         <AuthProvider>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/applications" replace />} />
+            <Route path="/" element={<Navigate to="/overview" replace />} />
             <Route path="/login" element={<LoginPage />} />
             <Route element={<RequireLogin />}>
+            <Route path="/overview" element={<GovernanceOverview />} />
             <Route path="/applications" element={<ApplicationRegistry />} />
             <Route path="/applications/:id" element={<ApplicationDetail />} />
             <Route path="/policies" element={<PolicyCatalog />} />

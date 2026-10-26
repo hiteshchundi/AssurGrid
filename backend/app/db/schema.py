@@ -211,6 +211,7 @@ governance_obligation = sa.Table(
     sa.ForeignKeyConstraint(["organization_id", "superseded_by_id", "application_id", "control_definition_id"], ["governance_obligation.organization_id", "governance_obligation.id", "governance_obligation.application_id", "governance_obligation.control_definition_id"], name="fk_obligation_supersession", ondelete="RESTRICT"),
     sa.UniqueConstraint("organization_id", "id", "application_id", "control_definition_id", name="uq_obligation_supersession_target"),
     sa.UniqueConstraint("organization_id", "generation_key", name="uq_obligation_generation_key"),
+    sa.UniqueConstraint("organization_id", "id", name="uq_obligation_org_id"),
     sa.UniqueConstraint("organization_id", "application_id", "policy_control_rule_id", "window_start", name="uq_obligation_rule_window"),
     sa.CheckConstraint("due_date >= window_start", name="ck_obligation_dates"),
     sa.CheckConstraint("frequency_months > 0", name="ck_obligation_frequency"),
@@ -218,4 +219,20 @@ governance_obligation = sa.Table(
     sa.CheckConstraint("generation_key ~ '^[0-9a-f]{64}$'", name="ck_obligation_generation_key"),
     sa.CheckConstraint("evidence_requirement IS NULL OR evidence_requirement ~ '[^[:space:]]'", name="ck_obligation_evidence"),
     sa.CheckConstraint("(superseded_by_id IS NULL AND supersession_reason IS NULL) OR (superseded_by_id IS NOT NULL AND superseded_by_id <> id AND supersession_reason IS NOT NULL AND supersession_reason ~ '[^[:space:]]')", name="ck_obligation_supersession"),
+)
+
+obligation_completion = sa.Table(
+    "obligation_completion", metadata,
+    sa.Column("id", sa.Uuid, primary_key=True, server_default=sa.text("gen_random_uuid()")),
+    sa.Column("organization_id", sa.Uuid, nullable=False),
+    sa.Column("obligation_id", sa.Uuid, nullable=False),
+    sa.Column("completed_by_id", sa.Uuid, nullable=False),
+    sa.Column("completed_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
+    sa.Column("evidence_reference", sa.String(500), nullable=False),
+    sa.Column("notes", sa.String(2000), nullable=False),
+    sa.ForeignKeyConstraint(["organization_id", "obligation_id"], ["governance_obligation.organization_id", "governance_obligation.id"], ondelete="RESTRICT"),
+    sa.ForeignKeyConstraint(["organization_id", "completed_by_id"], ["membership.organization_id", "membership.user_id"], ondelete="RESTRICT"),
+    sa.UniqueConstraint("obligation_id", name="uq_completion_obligation"),
+    sa.CheckConstraint("evidence_reference ~ '[^[:space:]]'", name="ck_completion_evidence"),
+    sa.CheckConstraint("notes ~ '[^[:space:]]'", name="ck_completion_notes"),
 )

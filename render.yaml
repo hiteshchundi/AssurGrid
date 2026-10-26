@@ -1,0 +1,34 @@
+# Free interview sandbox; never attach company data to this deployment.
+services:
+  - type: web
+    name: assurgrid-api
+    runtime: python
+    branch: codex/interview-mvp-release
+    plan: free
+    region: singapore
+    buildCommand: pip install -e ./backend
+    startCommand: sh backend/scripts/start_hosted.sh
+    healthCheckPath: /api/v1/health/ready
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: APP_ENV
+        value: production
+      - key: PUBLIC_DEMO_ENABLED
+        value: "true"
+      - key: DEMO_REGISTRY_ORGANIZATION_ID
+        value: becdd76c-490f-52a1-9247-9f6a6845d774
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: assurgrid-demo
+          property: connectionString
+databases:
+  - name: assurgrid-demo
+    plan: free
+    region: singapore
+    databaseName: assurgrid_demo
+    user: assurgrid_demo_user
+    postgresMajorVersion: "18"
+    ipAllowList: []

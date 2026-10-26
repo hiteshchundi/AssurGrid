@@ -3,6 +3,8 @@ import type { FormEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router';
 import { getApplications } from '../../api/applications';
+import { getGovernance } from '../../api/governance';
+import { Status } from '../governance/Governance';
 
 const filterOptions = [
   { name: 'classification', label: 'GxP classification', values: ['GxP', 'Non-GxP'] },
@@ -15,6 +17,9 @@ export function ApplicationRegistry() {
   const { identity } = useIdentity();
   const [params, setParams] = useSearchParams();
   const queryString = params.toString();
+  const governance = useQuery({ queryKey: ['governance', identity?.user_id, identity?.role, 'registry'],
+    queryFn: ({ signal }) => getGovernance('', signal), refetchInterval: false });
+  const health = new Map(governance.isError ? [] : governance.data?.applications.map(item => [item.id, item.governance_health]));
   const query = useQuery({
     queryKey: ['applications', identity?.user_id, identity?.role, queryString], queryFn: ({ signal }) => getApplications(queryString, signal),
     refetchInterval: false, staleTime: 30000,
@@ -70,7 +75,7 @@ export function ApplicationRegistry() {
           </label>
         </div>
       </form>
-      <p className="context-note">Lifecycle and validation are independent. Governance health will become available when policies and obligations are recorded.</p>
+      <p className="context-note">Lifecycle, validation, and governance are independent. Governance reflects open mandatory review schedules; an absent schedule does not imply compliance.</p>
       {query.isPending ? <div className="state-panel" role="status">Loading applications…</div> :
         query.isError ? <div className="state-panel error-panel" role="alert"><h2>Registry unavailable</h2><p>{query.error.message}</p>
           <button type="button" disabled={query.isFetching} onClick={() => void query.refetch()}>Try again</button></div> : data ? (
@@ -86,7 +91,7 @@ export function ApplicationRegistry() {
                 <tbody>{data.items.map((item) => <tr key={item.id}>
                   <th scope="row"><Link to={`/applications/${item.id}${queryString ? `?${queryString}` : ''}`}>{item.name}</Link><span className="ci-id">{item.ci_id}</span></th>
                   <td>{item.system_type}</td><td>{item.gxp_classification}</td><td>{item.criticality}</td>
-                  <td><span className="state-label">{item.lifecycle_state}</span></td><td>{item.validation_state}</td><td className="muted">Not available yet</td>
+                  <td><span className="state-label">{item.lifecycle_state}</span></td><td>{item.validation_state}</td><td><Status value={governance.isError ? 'Unavailable' : health.get(item.id) ?? 'Checking'} /></td>
                 </tr>)}</tbody>
               </table>
             </div>}

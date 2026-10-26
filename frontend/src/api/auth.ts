@@ -1,15 +1,14 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
+import { baseUrl, requestTimeout } from './config';
 export interface Identity { user_id: string; organization_id: string; role: string }
 export class AuthError extends Error {
   constructor(message: string, public status?: number) { super(message); }
 }
 export async function authRequest(path: string, options: RequestInit = {}): Promise<Response> {
-  if (!baseUrl) throw new AuthError('The API address is not configured.');
   let response: Response;
   try {
     response = await fetch(`${baseUrl}/api/v1/auth/${path}`, {
       ...options, credentials: 'include', cache: 'no-store',
-      signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000),
+      signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(requestTimeout)]) : AbortSignal.timeout(requestTimeout),
     });
   } catch { throw new AuthError('The sign-in service could not be reached. Please try again.'); }
   if (!response.ok) throw new AuthError(

@@ -38,8 +38,12 @@ export function LoginPage() {
   const location = useLocation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const demo = useQuery({ queryKey: ['auth-options'], queryFn: async () => {
+    const value: unknown = await (await authRequest('options')).json();
+    return !!value && typeof value === 'object' && 'public_demo_enabled' in value && value.public_demo_enabled === true;
+  }, refetchInterval: false });
   const requested = (location.state as { returnTo?: unknown } | null)?.returnTo;
-  const returnTo = typeof requested === 'string' && /^\/(?:applications|policies)(?:[/?]|$)/.test(requested) ? requested : '/applications';
+  const returnTo = typeof requested === 'string' && /^\/(?:overview|applications|policies)(?:[/?]|$)/.test(requested) ? requested : '/overview';
   if (identity) return <Navigate to={returnTo} replace />;
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError('');
@@ -56,7 +60,34 @@ export function LoginPage() {
     } catch (failure) { setError(failure instanceof Error ? failure.message : 'Sign-in failed.'); }
     finally { setBusy(false); }
   }
+  async function enterDemo(persona: string) {
+    setBusy(true); setError('');
+    try {
+      await authRequest('demo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ persona }) });
+      const next = await getIdentity();
+      if (!next) throw new AuthError('The demo session could not be established. Please try again.');
+      await cache.cancelQueries();
+      cache.removeQueries({ predicate: query => query.queryKey[0] !== 'session' });
+      cache.setQueryData(['session'], next); navigate(returnTo, { replace: true });
+    } catch (failure) { setError(failure instanceof Error ? failure.message : 'Could not open the demo.'); }
+    finally { setBusy(false); }
+  }
+  if (demo.data) return <section className="demo-entry"><div className="demo-intro"><p className="eyebrow">GOVERNANCE, WITH CONTEXT</p>
+    <h1>Know what’s due.<br />Show where the evidence is.</h1><p>A workspace for oversight of regulated applications. Explore a fictional portfolio, inspect policy-driven review schedules, and record completion evidence.</p>
+    <div className="demo-story"><span>01 · Portfolio</span><span>02 · Application</span><span>03 · Review</span><span>04 · Evidence</span></div>
+    <p className="context-note">An interview portfolio prototype. Synthetic data and illustrative policies; no regulatory certification or electronic signature claim.</p></div>
+    <div className="persona-panel detail-card"><p className="eyebrow">NORTHSTAR BIOPHARMA · FICTIONAL</p><h2>Choose a demo perspective</h2><p>No account setup needed. Switch roles by signing out.</p>
+      <div className="persona-grid">{[
+        ['quality', 'Quality', 'Inspect all 48 applications and record review evidence.'],
+        ['owner', 'Application Owner', 'Focus on your 3 assigned systems and complete reviews.'],
+        ['viewer', 'Viewer', 'Explore LIMS with read-only access.'],
+        ['admin', 'Admin', 'Explore the full portfolio and policy history.'],
+      ].map(([persona, label, description]) => <button key={persona} disabled={busy || pending} onClick={() => void enterDemo(persona)}><strong>{label} →</strong><span>{description}</span></button>)}</div>
+      {busy ? <p role="status">Opening your workspace…</p> : null}{error ? <p className="notice" role="alert">{error}</p> : null}
+      <p className="context-note">Shared sandbox: completion records are visible to other visitors. Enter fictional information only.</p></div></section>;
   return <section className="login-panel panel"><p className="eyebrow">ASSURGRID WORKSPACE</p><h1>Sign in to your registry</h1>
+    {demo.isPending ? <p role="status">Checking demo availability… The free server may take a minute to wake up.</p> : null}
+    {demo.isError ? <p className="notice" role="alert">The demo server could not be reached. <button onClick={() => void demo.refetch()}>Try again</button></p> : null}
     <p>See the applications assigned to your role in the fictional Northstar organization.</p>
     <form onSubmit={submit}>
       <label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="username" maxLength={254} required />
